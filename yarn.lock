@@ -1456,6 +1456,29 @@
   dependencies:
     tslib "^2.3.0"
 
+"@ng-util/lazy@^14.0.0":
+  version "14.0.1"
+  resolved "https://registry.npmmirror.com/@ng-util/lazy/-/lazy-14.0.1.tgz#27d2cd31bf49ad557e63476b3505bdce2cea3dbe"
+  integrity sha512-ey2xwKJG+x8zx5FYhQexSI2Hj091QcH7l9NP68pAwLZicmM/M+VGvcCWwyNh4tyfB+LD3GpKvzK2IP8VynLPLQ==
+  dependencies:
+    tslib "^2.3.0"
+
+"@ng-util/markdown@^15.0.0":
+  version "15.0.0"
+  resolved "https://registry.npmmirror.com/@ng-util/markdown/-/markdown-15.0.0.tgz#36e87b62856d0128b608a7d4e38ae9a72f5eba28"
+  integrity sha512-0tPr67ajieYrKFSzv4qoOGqEO37ZtW2JBS3O/ym85DCN61oInYI8Q7OnkcmX4OvGjhd1PDN747enH2NERZ6K1g==
+  dependencies:
+    "@ng-util/lazy" "^14.0.0"
+    "@ng-util/util" "^14.0.0"
+    tslib "^2.3.0"
+
+"@ng-util/util@^14.0.0":
+  version "14.0.1"
+  resolved "https://registry.npmmirror.com/@ng-util/util/-/util-14.0.1.tgz#5ea93468efd73c7ef493af8ded5f5ba2ea934567"
+  integrity sha512-yJa36/q+Ffydd9NE83b9vfGCJSuTwoV/+WYYFjr0bodcNe36+nShuOfnEucxTbBolygxZdFyd09DeBsdyq2DCg==
+  dependencies:
+    tslib "^2.3.0"
+
 "@ngtools/webpack@15.2.8":
   version "15.2.8"
   resolved "https://registry.npmmirror.com/@ngtools/webpack/-/webpack-15.2.8.tgz#df8fb9300ccf94cab8f8ad69fb16fd31181e6c82"
@@ -1937,6 +1960,11 @@
   version "7.0.11"
   resolved "https://registry.npmmirror.com/@types/json-schema/-/json-schema-7.0.11.tgz#d421b6c527a3037f7c84433fd2c4229e016863d3"
   integrity sha512-wOuvG1SN4Us4rez+tylwwwCV1psiNVOkJeM3AUWUNWg/jDQY2+HE/444y5gc+jBmRqASOm2Oeh5c1axHobwRKQ==
+
+"@types/json2md@^1.5.1":
+  version "1.5.1"
+  resolved "https://registry.npmmirror.com/@types/json2md/-/json2md-1.5.1.tgz#2eba6ececf43252950d286eeae77612024392ad3"
+  integrity sha512-nl3qRDdBUtGeHEhwSeYMtXw5i6UXspS6pxaahmcrE4Fxt0UAvKvsJzu6UMtJ85+yTYiB9nA0TB1kFMEVkYDgUg==
 
 "@types/mime@*":
   version "3.0.1"
@@ -4171,6 +4199,11 @@ indent-string@^4.0.0:
   resolved "https://registry.npmmirror.com/indent-string/-/indent-string-4.0.0.tgz#624f8f4497d619b2d9768531d58f4122854d7251"
   integrity sha512-EdDDZu4A2OyIK7Lr/2zG+w5jmbuk1DVBnEwREQvBzspBJkCEbRa8GxU1lghYcaGJCnRWibjDXlq779X1/y5xwg==
 
+indento@^1.1.13:
+  version "1.1.13"
+  resolved "https://registry.npmmirror.com/indento/-/indento-1.1.13.tgz#751331b327c04740eeb7be40c5606e6e255c9e36"
+  integrity sha512-YZWk3mreBEM7sBPddsiQnW9Z8SGg/gNpFfscJq00HCDS7pxcQWWWMSVKJU7YkTRyDu1Zv2s8zaK8gQWKmCXHlg==
+
 infer-owner@^1.0.4:
   version "1.0.4"
   resolved "https://registry.npmmirror.com/infer-owner/-/infer-owner-1.0.4.tgz#c4cefcaa8e51051c2a40ba2ce8a3d27295af9467"
@@ -4474,6 +4507,13 @@ json-schema-traverse@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmmirror.com/json-schema-traverse/-/json-schema-traverse-1.0.0.tgz#ae7bcb3656ab77a73ba5c49bf654f38e6b6860e2"
   integrity sha512-NM8/P9n3XjXhIZn1lLhkFaACTOURQXjWhV4BA/RnOv8xvgqtqpAX9IO4mRQxSx1Rlo4tqzeqb0sOlruaOy3dug==
+
+json2md@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.npmmirror.com/json2md/-/json2md-2.0.0.tgz#9ea4404183b836c39dfa886b4bbf25c8186694eb"
+  integrity sha512-4PIMtD0zTfQZWcUId1EyHY2BQ2EG/imHWHkGFbXYPlczW8G6wPJA/BRVN3e5v6NPwFUCcoFvUsCeo6rzV2CWww==
+  dependencies:
+    indento "^1.1.13"
 
 json5@^2.1.2, json5@^2.2.1, json5@^2.2.2:
   version "2.2.3"

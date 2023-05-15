@@ -75,7 +75,7 @@
         }}</span>
         <fa-icon
           *ngIf="isMobile"
-          class="ml-4"
+          class="ms-4"
           [ngClass]="{
             'text-secondary': hideSearchZone,
             'text-primary': !hideSearchZone
@@ -434,7 +434,7 @@
                   target="_blank"
                   [innerHtml]="daily_item.title"
                 ></a>
-                <fa-icon [icon]="faCopy" class="author searchCopy" (click)="copyTitle(i)"></fa-icon>
+                <fa-icon [icon]="faCopy" class="searchCopy" (click)="copyTitle(i)"></fa-icon>
               </div>
               <div class="summary" [innerHtml]="daily_item.summary"></div>
               <div>

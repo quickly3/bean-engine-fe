@@ -1,0 +1,29 @@
+.graph-container{
+    background: #f3f4fa;
+    .graph-main{
+        min-height: 960px;
+    }
+}
+.graph-nav{
+    align-items: inherit;
+    justify-content: start;
+    padding: 0;
+    height: 100%;
+    background-color: #fff;
+    cursor: pointer;
+    border: none;
+    font-size: 16px;
+    .list-group-item{
+        border: none;
+        border-top: none;
+        border-bottom: none;
+        font-size: 16px;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+    }
+    .active{
+        background-color:#43ac6a;
+        border-color:#43ac6a;
+    }
+}
+

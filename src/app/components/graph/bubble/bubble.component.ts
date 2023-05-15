@@ -13,7 +13,7 @@ export default class BubbleComponent implements OnInit, OnChanges {
   @Input() data: Datum[] = [];
   @Input() dataId = '';
   @Input() textSize = '1rem';
-  @Input() radiusFix = null;
+  @Input() radiusFix:any = null;
 
   private svg: any;
 
