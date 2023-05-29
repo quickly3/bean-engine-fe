@@ -1,5 +1,5 @@
 export const environment = {
     production: false,
     title: 'Dev Environment Heading',
-    apiURL: 'http://searchgank.com'
+    apiURL: 'http://searchgank.com:3000'
   };
