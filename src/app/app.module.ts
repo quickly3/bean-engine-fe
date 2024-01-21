@@ -27,8 +27,8 @@ import SubGraphComponents from './pages/graph/sub-graph';
     GithubComponent,
     GraphComponent,
     ...SubGraphComponents.allComponents,
+    SubGraphComponents.subComponents
   ],
-  entryComponents: SubGraphComponents.subComponents,
   imports: [
     BrowserModule,
     AppRoutingModule,

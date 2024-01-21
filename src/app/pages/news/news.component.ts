@@ -15,6 +15,9 @@ export class NewsComponent implements OnInit {
   dHtml: any = {};
   titles: any[] = [];
   showRawMd = 'text';
+  mdOptions = {
+    cdn: 'https://unpkg.com/vditor@${VDITOR_VERSION}',
+  };
 
   constructor(graphService: GraphService) {
     this.graphService = graphService;
@@ -36,7 +39,6 @@ export class NewsComponent implements OnInit {
           const sourceData: any = {};
           dd.push({ h3: item.title });
           dtext.push({ h3: item.title });
-          dtext.push('');
 
           sourceData.title = item.title;
           sourceData.items = [];
@@ -64,6 +66,7 @@ export class NewsComponent implements OnInit {
       }
       this.MdData = json2md(dd);
       this.MdText = json2md(dtext);
+      console.log()
     });
   }
 

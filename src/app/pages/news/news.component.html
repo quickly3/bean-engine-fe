@@ -72,7 +72,7 @@
     </div>
     <div *ngIf="showRawMd == 'html'">
       <div *ngIf="MdData">
-        <nu-markdown-preview [value]="MdData"></nu-markdown-preview>
+        <!-- <nu-markdown-preview value="MdData"></nu-markdown-preview> -->
       </div>
     </div>
     <div *ngIf="showRawMd === 'markdown'">
@@ -82,7 +82,10 @@
     </div>
     <div id="MdText" *ngIf="showRawMd === 'text'">
       <div *ngIf="MdText">
-        <nu-markdown-preview [value]="MdText"></nu-markdown-preview>
+        <nu-markdown [(ngModel)]="MdText"></nu-markdown>
+        <!-- <nu-markdown-preview value="# Title"></nu-markdown-preview> -->
+
+        <!-- <nu-markdown-preview [(ngModel)]="MdText"></nu-markdown-preview> -->
       </div>
     </div>
     <div id="titles">

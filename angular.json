@@ -32,7 +32,14 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies":[
+              "interval-tree-1d",
+              "lodash",
+              "d3-cloud",
+              "json2md",
+              "moment-timezone"
+            ]
           },
           "configurations": {
             "production": {
