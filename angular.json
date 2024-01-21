@@ -85,13 +85,13 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "bean-engine-fe:build:production"
+              "buildTarget": "bean-engine-fe:build:production"
             },
             "development": {
-              "browserTarget": "bean-engine-fe:build:development"
+              "buildTarget": "bean-engine-fe:build:development"
             },
             "local": {
-              "browserTarget": "bean-engine-fe:build:local"
+              "buildTarget": "bean-engine-fe:build:local"
             }
           },
           "defaultConfiguration": "development"
@@ -99,7 +99,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "bean-engine-fe:build"
+            "buildTarget": "bean-engine-fe:build"
           }
         },
         "test": {
