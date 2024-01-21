@@ -1862,10 +1862,10 @@
   dependencies:
     tslib "^2.3.0"
 
-"@ng-util/markdown@^15.0.0":
-  version "15.0.0"
-  resolved "https://registry.npmmirror.com/@ng-util/markdown/-/markdown-15.0.0.tgz#36e87b62856d0128b608a7d4e38ae9a72f5eba28"
-  integrity sha512-0tPr67ajieYrKFSzv4qoOGqEO37ZtW2JBS3O/ym85DCN61oInYI8Q7OnkcmX4OvGjhd1PDN747enH2NERZ6K1g==
+"@ng-util/markdown@^17.0.1":
+  version "17.0.1"
+  resolved "https://registry.npmmirror.com/@ng-util/markdown/-/markdown-17.0.1.tgz#0b781dc6f4db32d9907345096e0412d6f213823d"
+  integrity sha512-zgDLwDaHG1c1u/6ZnS6oaCT2xNULIotlxBu/wesamWBIgMk87Qe6lJcdgOv82FlveMs7t8LeCVtY67ePjhvB1Q==
   dependencies:
     "@ng-util/lazy" "^14.0.0"
     "@ng-util/util" "^14.0.0"
