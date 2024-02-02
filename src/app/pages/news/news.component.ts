@@ -18,6 +18,7 @@ export class NewsComponent implements OnInit {
   mdOptions = {
     cdn: 'https://unpkg.com/vditor@${VDITOR_VERSION}',
   };
+  resp: any;
 
   constructor(graphService: GraphService) {
     this.graphService = graphService;
@@ -30,15 +31,18 @@ export class NewsComponent implements OnInit {
   getDailyMd() {
     this.graphService.dailyMd().subscribe((resp: any) => {
       const dd: any[] = [{ h2: resp.title }];
+      this.resp = resp;
       const dtext: any[] = [{ h2: resp.title }];
       this.dHtml.title = resp.title;
       this.dHtml.sources = [];
+      let dtext2 = `## ${resp.title}\n`;
 
       for (const item of resp.data) {
         if (item.data.length > 0) {
           const sourceData: any = {};
           dd.push({ h3: item.title });
           dtext.push({ h3: item.title });
+          dtext2 += `### ${item.title}\n`;
 
           sourceData.title = item.title;
           sourceData.items = [];
@@ -55,7 +59,8 @@ export class NewsComponent implements OnInit {
             dd_ol.push({
               link: itemLink,
             });
-            dtext.push([`${i + 1}.${item2.title}`, `${item2.url}`, ``]);
+            dtext.push([`${i + 1}.${item2.title}`, ``, `${item2.url}`], ``);
+            dtext2 += `${i + 1}.${item2.title}\r\n${item2.url}\r\n`;
           });
           dd.push({
             ol: dd_ol,
@@ -65,8 +70,7 @@ export class NewsComponent implements OnInit {
         }
       }
       this.MdData = json2md(dd);
-      this.MdText = json2md(dtext);
-      console.log()
+      this.MdText = dtext2;
     });
   }
 

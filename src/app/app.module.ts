@@ -16,6 +16,7 @@ import { GraphComponent } from './pages/graph/graph.component';
 import { NuMarkdownModule } from '@ng-util/markdown';
 import { GithubComponent } from './pages/github/github.component';
 import SubGraphComponents from './pages/graph/sub-graph';
+import { MarkdownModule } from 'ngx-markdown';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import SubGraphComponents from './pages/graph/sub-graph';
     NgbModule,
     FontAwesomeModule,
     NuMarkdownModule.forRoot(),
+    MarkdownModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent],
