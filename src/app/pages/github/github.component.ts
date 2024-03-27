@@ -27,7 +27,7 @@ export class GithubComponent implements OnInit {
   splList: any[] = [];
   sinceList: any[] = [];
   lanList: any[] = [];
-
+  resp: any;
   selectedSpl;
   selectedSince;
   selectedLan;
@@ -71,7 +71,7 @@ export class GithubComponent implements OnInit {
     this.graphService.dailyGitHub(params).subscribe((resp: any) => {
       const dd: any[] = [{ h2: resp.title }];
       const dtext: any[] = [{ h2: resp.title }];
-
+      this.resp = resp;
       for (const item of resp.data) {
         if (item.data.length > 0) {
           dd.push({ h5: item.title });

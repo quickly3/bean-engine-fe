@@ -120,7 +120,10 @@
     </div>
     <div *ngIf="showRawMd == 'html'">
       <div *ngIf="MdData">
-        <nu-markdown-preview [value]="MdData"></nu-markdown-preview>
+        <markdown
+        [data]="MdData"
+        [disableSanitizer]="true">
+      </markdown>
       </div>
     </div>
     <div *ngIf="showRawMd === 'markdown'">
@@ -129,8 +132,15 @@
       </div>
     </div>
     <div *ngIf="showRawMd === 'text'">
-      <div *ngIf="MdText">
-        <nu-markdown-preview [value]="MdText"></nu-markdown-preview>
+      <div *ngIf="resp">
+        <h2>{{resp.title}}</h2>
+        <div *ngFor="let site of resp.data">
+          <h3 *ngIf="site.data.length > 0">{{site.title}}</h3>
+          <div *ngFor="let p of site.data; let i = index">
+            <div>{{i+1}}.{{p.title}}</div>
+            <div>{{p.url}}</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
