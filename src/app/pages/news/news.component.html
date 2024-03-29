@@ -85,12 +85,12 @@
     </div>
     <div id="MdText" *ngIf="showRawMd === 'text'">
       <div *ngIf="resp">
-        <h2>{{resp.title}}</h2>
+        <p class="text-main">{{resp.title}}</p>
         <div *ngFor="let site of resp.data">
-          <h3 *ngIf="site.data.length > 0">{{site.title}}</h3>
+          <p class="text-channel" *ngIf="site.data.length > 0">{{site.title}}</p>
           <div *ngFor="let p of site.data; let i = index">
-            <div>{{i+1}}.{{p.title}}</div>
-            <div>{{p.url}}</div>
+            <p class="text-title">{{i+1}}.{{p.title}}</p>
+            <p class="text-url">{{p.url}}</p>
           </div>
         </div>
       </div>
