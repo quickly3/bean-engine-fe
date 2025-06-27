@@ -73,6 +73,11 @@ const sourceList = [
         source_class: 'icon-ai',
         text: 'ai',
     },
+        {
+        title: 'tai',
+        source_class: 'icon-tai',
+        text: 'tai',
+    },
 
 ];
 
