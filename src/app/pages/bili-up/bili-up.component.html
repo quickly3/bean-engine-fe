@@ -1,0 +1,131 @@
+<app-nav></app-nav>
+<div class="container-fluid">
+  <div class="search-header">
+    <div class="search-input row">
+      <div class="col-md-2 icon-zone">
+        <img src="/favicon.ico" class="icon" alt="" />
+        <span class="web-title">Search Gank</span>
+      </div>
+      <div class="col-md-6">
+        <div class="search-zone">
+          <input
+            id="typeahead-basic"
+            type="text"
+            class="form-control form-control-lg"
+            [(ngModel)]="queryParams.keywords"
+            (keydown)="searchOnKeydown($event)"
+            placeholder="搜索"
+          />
+          <fa-icon class="searchIcon" [icon]="faSearch"></fa-icon>
+        </div>
+      </div>
+      <div class="col-md-4 search-mode">
+        <div ngbDropdown class="d-inline-block sort-by">
+          <button
+            class="btn btn-outline-primary btn-sm"
+            id="dropdownBasic1"
+            ngbDropdownToggle
+          >
+            排序方式
+          </button>
+          <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+            <button ngbDropdownItem *ngFor="let item of sortItems">
+              {{ item.label }}
+            </button>
+          </div>
+        </div>
+        <!-- <span class="text-secondary" style="font-size: 14px">{{
+          queryParams.sortBy.label
+        }}</span> -->
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-2">
+      <div class="option-title">
+        <span>数据来源:</span>
+      </div>
+      <div class="option-zone source-selector">
+        <div
+          class="custom-control custom-radio"
+          *ngFor="let source of sourceList"
+        >
+          <input
+            type="radio"
+            name="sourceRadio"
+            value="{{ source.title }}"
+            [(ngModel)]="this.queryParams.source.title"
+          />
+          <div class="icons {{ source.source_class }}"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-10">
+      <div style="font-size: 12px" class="mb-3">
+        找到 <strong>{{ totalNumber }}</strong> 条结果 （用时约
+        <strong>{{ took }}</strong> ms） 当前第
+        <strong>{{ queryParams.page }}</strong> 页,共
+        <strong>{{ totalPage }}</strong> 页 数据来源
+        <!-- <strong>{{ queryParams.source.text }}</strong> -->
+      </div>
+      <div class="upList row">
+        <div class="media col-md-3 mb-3" *ngFor="let up of upList">
+          <div class="d-flex align-items-center">
+            <!-- <img
+              [src]="up.face"
+              class="avatar_large rounded-circle me-2 border border-info"
+              alt="{{ up.uname }}"
+              width="60" height="60"
+            /> -->
+            <div class="flex-grow-1 ms-2">
+              <div class="d-flex align-items-center">
+                <a
+                  class="fw-bold"
+                  href="https://space.bilibili.com/{{ up.mid }}"
+                  target="_blank"
+                  >{{ up.uname }}</a
+                >
+                <span
+                  *ngIf="up.official_verify?.desc"
+                  class="badge bg-info ms-2"
+                  >{{ up.official_verify.desc }}</span
+                >
+              </div>
+              <div class="text-muted" style="font-size: 13px">
+                {{ up.sign }}
+              </div>
+              <div>
+                <span
+                  *ngIf="up.attribute === 2"
+                  class="text-success"
+                  style="font-size: 12px"
+                >
+                  已认证
+                </span>
+                <span
+                  *ngIf="up.crawlStatus === 'completed'"
+                  class="text-secondary"
+                  style="font-size: 12px"
+                >
+                  已抓取
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pagination">
+        <ngb-pagination
+          class="navigation"
+          [collectionSize]="totalNumber"
+          [(page)]="queryParams.page"
+          [pageSize]="queryParams.row"
+          [maxSize]="5"
+          [ellipses]="false"
+          size="sm"
+          (pageChange)="pageChange()"
+        ></ngb-pagination>
+      </div>
+    </div>
+  </div>
+</div>
