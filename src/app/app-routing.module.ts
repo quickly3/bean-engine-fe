@@ -1,17 +1,19 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { SearchComponent } from './pages/search/search.component';
-import { BiliUpComponent } from './pages/bili-up/bili-up.component';
 import { GithubComponent } from './pages/github/github.component';
 import { GraphComponent } from './pages/graph/graph.component';
 import { KrNewsComponent } from './pages/kr-news/kr-news.component';
 import { NewsComponent } from './pages/news/news.component';
 import { ChartComponent } from './pages/chart/chart.component';
+import { BiliUpListComponent } from './pages/bili-up-list/bili-up-list.component';
+import { BiliUpComponent } from './pages/bili-up/bili-up.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'search', pathMatch: 'full' },
   { path: 'search', component: SearchComponent },
   { path: 'bili-up', component: BiliUpComponent },
+  { path: 'bili-up-list', component: BiliUpListComponent },
   { path: 'graph', component: GraphComponent },
   { path: 'news', component: NewsComponent },
   { path: 'kr-news', component: KrNewsComponent },
