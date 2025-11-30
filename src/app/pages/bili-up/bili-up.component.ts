@@ -16,11 +16,13 @@ import {
   faAngleDoubleUp,
   faCloud,
   faCalendarAlt,
+  faLink
 } from '@fortawesome/free-solid-svg-icons';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
 
 import { of } from 'rxjs';
 import { BiliService } from 'src/app/api/bili.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'bili-up',
@@ -43,8 +45,9 @@ export class BiliUpComponent {
   faAngleDoubleUp = faAngleDoubleUp;
   faCloud = faCloud;
   faCalendarAlt = faCalendarAlt;
+  faLink = faLink;
 
-  totalNumber: number = 0;
+  total: number = 0;
   took: number = 0;
   totalPage: number = 0;
 
@@ -65,12 +68,14 @@ export class BiliUpComponent {
     this.getBiliUps();
   }
 
+  searchOnClick(){
+    this.getBiliUps();
+  }
+
   searchOnKeydown(e: { key: string }) {
+    console.log(e)
     if (e.key === 'Enter') {
-      if (this.instance) {
-        this.instance.dismissPopup();
         this.getBiliUps();
-      }
     }
   }
 
@@ -101,6 +106,16 @@ export class BiliUpComponent {
     const params = { ...this.queryParams };
     this.biliService.getUps(params).subscribe((result: any) => {
       this.upList = result.data;
+      this.total = result.total;
+
+      this.upList.map(u=>{
+        u.lastPublishStr = u.lastPublish
+          ? moment(Number(u.lastPublish) * 1000).format('YYYY-MM-DD HH:mm')
+          : '';
+        // try common field names for total videos (fallbacks)
+        u.totalVideos =
+          u.totalVideos ?? u.videoCount ?? u.archiveCount ?? u.videos ?? 0;
+      })
     });
   };
 

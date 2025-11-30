@@ -8,6 +8,7 @@ import { NewsComponent } from './pages/news/news.component';
 import { ChartComponent } from './pages/chart/chart.component';
 import { BiliUpListComponent } from './pages/bili-up-list/bili-up-list.component';
 import { BiliUpComponent } from './pages/bili-up/bili-up.component';
+import { UpVideosComponent } from './pages/up-videos/up-videos.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'search', pathMatch: 'full' },
@@ -19,6 +20,8 @@ const routes: Routes = [
   { path: 'kr-news', component: KrNewsComponent },
   { path: 'github', component: GithubComponent },
   { path: 'chart', component: ChartComponent },
+  { path: 'up-videos', component: UpVideosComponent },
+
 ];
 
 @NgModule({
