@@ -18,12 +18,14 @@ import SubGraphComponents from './pages/graph/sub-graph';
 import { MarkdownModule } from 'ngx-markdown';
 import { ChartComponent } from './pages/chart/chart.component';
 import { BiliUpComponent } from './pages/bili-up/bili-up.component';
+import { UpVideosComponent } from './pages/up-videos/up-videos.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     SearchComponent,
     BiliUpComponent,
+    UpVideosComponent,
     NewsComponent,
     KrNewsComponent,
     GithubComponent,

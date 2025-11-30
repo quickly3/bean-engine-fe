@@ -16,7 +16,7 @@
             (keydown)="searchOnKeydown($event)"
             placeholder="搜索"
           />
-          <fa-icon class="searchIcon" [icon]="faSearch"></fa-icon>
+          <fa-icon class="searchIcon" [icon]="faSearch" (click)="searchOnClick()"></fa-icon>
         </div>
       </div>
       <div class="col-md-4 search-mode">
@@ -62,7 +62,7 @@
     </div>
     <div class="col-md-10">
       <div style="font-size: 12px" class="mb-3">
-        找到 <strong>{{ totalNumber }}</strong> 条结果 （用时约
+        找到 <strong>{{ total }}</strong> 条结果 （用时约
         <strong>{{ took }}</strong> ms） 当前第
         <strong>{{ queryParams.page }}</strong> 页,共
         <strong>{{ totalPage }}</strong> 页 数据来源
@@ -94,6 +94,11 @@
               <div class="text-muted" style="font-size: 13px">
                 {{ up.sign }}
               </div>
+              <div class="text-muted mt-1" style="font-size: 12px">
+                <fa-icon [icon]="faCalendarAlt" class="me-1"></fa-icon>
+                <span *ngIf="up.lastPublishStr">最新发布: {{ up.lastPublishStr }}</span>
+                <span *ngIf="up.totalVideos !== undefined" class="ms-2">总发布视频: {{ up.totalVideos }}</span>
+              </div>
               <div>
                 <span
                   *ngIf="up.attribute === 2"
@@ -109,6 +114,17 @@
                 >
                   已抓取
                 </span>
+                <a
+                  class="text-primary"
+                  [href]="'/#/up-videos?mid=' + up.mid"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title="打开空间"
+                  aria-label="打开空间"
+                  style="font-size: 12px"
+                >
+                  <fa-icon [icon]="faLink" class="me-1"></fa-icon>
+                </a>
               </div>
             </div>
           </div>
@@ -117,11 +133,10 @@
       <div class="pagination">
         <ngb-pagination
           class="navigation"
-          [collectionSize]="totalNumber"
+          [collectionSize]="total"
           [(page)]="queryParams.page"
-          [pageSize]="queryParams.row"
+          [pageSize]="queryParams.pageSize"
           [maxSize]="5"
-          [ellipses]="false"
           size="sm"
           (pageChange)="pageChange()"
         ></ngb-pagination>
