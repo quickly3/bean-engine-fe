@@ -9,9 +9,10 @@ import WordCloudComponent from './graph/word-cloud/word-cloud.component';
 
 import TagsModalComponent from './modal/tags-modal/tags-modal.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { MarkdownModule } from 'ngx-markdown';
 
 @NgModule({
-  imports: [CommonModule, FontAwesomeModule],
+  imports: [CommonModule, FontAwesomeModule, MarkdownModule],
   declarations: [
     NavComponent,
     HorizontalBarComponent,

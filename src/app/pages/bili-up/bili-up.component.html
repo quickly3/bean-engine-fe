@@ -16,7 +16,11 @@
             (keydown)="searchOnKeydown($event)"
             placeholder="搜索"
           />
-          <fa-icon class="searchIcon" [icon]="faSearch" (click)="searchOnClick()"></fa-icon>
+          <fa-icon
+            class="searchIcon"
+            [icon]="faSearch"
+            (click)="searchOnClick()"
+          ></fa-icon>
         </div>
       </div>
       <div class="col-md-4 search-mode">
@@ -96,8 +100,12 @@
               </div>
               <div class="text-muted mt-1" style="font-size: 12px">
                 <fa-icon [icon]="faCalendarAlt" class="me-1"></fa-icon>
-                <span *ngIf="up.lastPublishStr">最新发布: {{ up.lastPublishStr }}</span>
-                <span *ngIf="up.totalVideos !== undefined" class="ms-2">总发布视频: {{ up.totalVideos }}</span>
+                <span *ngIf="up.lastPublishStr"
+                  >最新发布: {{ up.lastPublishStr }}</span
+                >
+                <span *ngIf="up.totalVideos !== undefined" class="ms-2"
+                  >总发布视频: {{ up.totalVideos }}</span
+                >
               </div>
               <div>
                 <span
@@ -124,6 +132,19 @@
                   style="font-size: 12px"
                 >
                   <fa-icon [icon]="faLink" class="me-1"></fa-icon>
+                </a>
+
+                <a
+                  *ngIf="up.analysisId"
+                  class="text-primary"
+                  [href]="'/#/up-analysis?analysisId=' + up.analysisId"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title="分析报告"
+                  aria-label="分析报告"
+                  style="font-size: 12px"
+                >
+                  <fa-icon [icon]="faFileAlt" class="me-1"></fa-icon>
                 </a>
               </div>
             </div>

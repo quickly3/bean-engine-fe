@@ -16,7 +16,8 @@ import {
   faAngleDoubleUp,
   faCloud,
   faCalendarAlt,
-  faLink
+  faLink,
+  faFileAlt,
 } from '@fortawesome/free-solid-svg-icons';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
 
@@ -46,6 +47,7 @@ export class BiliUpComponent {
   faCloud = faCloud;
   faCalendarAlt = faCalendarAlt;
   faLink = faLink;
+  faFileAlt = faFileAlt;
 
   total: number = 0;
   took: number = 0;
@@ -68,14 +70,14 @@ export class BiliUpComponent {
     this.getBiliUps();
   }
 
-  searchOnClick(){
+  searchOnClick() {
     this.getBiliUps();
   }
 
   searchOnKeydown(e: { key: string }) {
-    console.log(e)
+    console.log(e);
     if (e.key === 'Enter') {
-        this.getBiliUps();
+      this.getBiliUps();
     }
   }
 
@@ -108,14 +110,14 @@ export class BiliUpComponent {
       this.upList = result.data;
       this.total = result.total;
 
-      this.upList.map(u=>{
+      this.upList.map((u) => {
         u.lastPublishStr = u.lastPublish
           ? moment(Number(u.lastPublish) * 1000).format('YYYY-MM-DD HH:mm')
           : '';
         // try common field names for total videos (fallbacks)
         u.totalVideos =
           u.totalVideos ?? u.videoCount ?? u.archiveCount ?? u.videos ?? 0;
-      })
+      });
     });
   };
 

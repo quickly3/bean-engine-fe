@@ -18,4 +18,8 @@ export class BiliService {
   getUpVideos = (params: any) => {
     return this.http.post(this.apiURL + '/bili/getUpVideos', params);
   };
+
+  getUpAnalysis = (params: any) => {
+    return this.http.post(this.apiURL + '/bili/getUpAnalysis', params);
+  };
 }

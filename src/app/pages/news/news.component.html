@@ -72,10 +72,7 @@
     </div>
     <div *ngIf="showRawMd == 'html'">
       <div *ngIf="MdData">
-        <markdown
-        [data]="MdData"
-        [disableSanitizer]="true">
-      </markdown>
+        <markdown [data]="MdData" [disableSanitizer]="true"> </markdown>
       </div>
     </div>
     <div *ngIf="showRawMd === 'markdown'">
@@ -85,12 +82,14 @@
     </div>
     <div id="MdText" *ngIf="showRawMd === 'text'">
       <div *ngIf="resp">
-        <p class="text-main">{{resp.title}}</p>
+        <p class="text-main">{{ resp.title }}</p>
         <div *ngFor="let site of resp.data">
-          <p class="text-channel" *ngIf="site.data.length > 0">{{site.title}}</p>
+          <p class="text-channel" *ngIf="site.data.length > 0">
+            {{ site.title }}
+          </p>
           <div *ngFor="let p of site.data; let i = index">
-            <p class="text-title">{{i+1}}.{{p.title}}</p>
-            <p class="text-url">{{p.url}}</p>
+            <p class="text-title">{{ i + 1 }}.{{ p.title }}</p>
+            <p class="text-url">{{ p.url }}</p>
           </div>
         </div>
       </div>

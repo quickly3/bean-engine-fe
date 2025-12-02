@@ -1,0 +1,52 @@
+<app-nav></app-nav>
+
+<div class="container article-list">
+  <div class="header d-flex align-items-center justify-content-between"></div>
+
+  <div class="row g-2">
+    <div class="col-12">
+      <div class="up-analysis-page">
+        <ul class="nav nav-tabs mb-3" role="tablist">
+          <li class="nav-item" *ngFor="let tab of tabs">
+            <a
+              class="nav-link"
+              [class.active]="selectedTab === tab.id"
+              (click)="selectTab(tab.id)"
+              href="javascript:void(0)"
+            >
+              {{ tab.label }}
+            </a>
+          </li>
+        </ul>
+
+        <div class="tab-content">
+          <div *ngIf="selectedTab === 'ai'">
+            <div *ngIf="markdownStr">
+              <markdown [data]="markdownStr" [disableSanitizer]="false">
+              </markdown>
+            </div>
+            <div *ngIf="!markdownStr">暂无内容</div>
+          </div>
+          <div *ngIf="selectedTab === 'stats'">
+            <h5>统计分析</h5>
+            <p><strong>词数：</strong> {{ wordCount }}</p>
+            <p><strong>最常见词汇：</strong></p>
+            <ul>
+              <li *ngFor="let w of topWords">{{ w.word }} — {{ w.count }}</li>
+            </ul>
+          </div>
+          <div *ngIf="selectedTab === 'trend'">
+            <h5>趋势分析</h5>
+            <p class="muted">
+              （占位）基于内容的简单趋势或图表可以在这里显示。
+            </p>
+            <div *ngIf="plainPreview">
+              <p><strong>内容预览：</strong></p>
+              <pre class="preview">{{ plainPreview }}</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
