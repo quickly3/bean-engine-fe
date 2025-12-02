@@ -21,7 +21,7 @@
 
   <div *ngIf="loading" class="text-center my-4">加载中...</div>
 
-  <div class="row g-3">
+  <div class="row g-2">
     <div class="col-12 col-md-6 col-lg-4" *ngFor="let a of articles">
       <article class="card article-card">
         <div class="card-body">
@@ -35,15 +35,37 @@
             <span class="dot">·</span>
           </div>
         </div>
-        <div class="card-footer d-flex justify-content-between align-items-center">
+        <div class="card-footer">
           <div class="tags">
             <span class="badge bg-light text-muted">{{ a.category }}</span>
             <span *ngIf="a.tag" class="badge bg-light text-muted">{{ a.tag }}</span>
           </div>
+          <div *ngIf="a.honors && a.honors.length > 0" class="honors">
+            <span *ngFor="let honor of a.honors; let i = index" 
+                  class="badge" 
+                  [ngClass]="'honor-badge-' + (i % 6)">{{ honor.desc }}</span>
+          </div>
           <div class="stats text-muted">
             <small>播放 {{ a.play || 0 }}</small>
             <small class="ms-2">评论 {{ a.comment || 0 }}</small>
-            <small class="ms-2">{{ a.createdStr }}</small>
+            <small class="ms-2">弹幕 {{ a.danmaku || 0 }}</small>
+          </div>
+          <div class="stats text-muted">
+            <small>点赞 {{ a.like || 0 }}</small>
+            <small class="ms-2">收藏 {{ a.favorite || 0 }}</small>
+            <small class="ms-2">投币 {{ a.coin || 0 }}</small>
+            <small class="ms-2">分享 {{ a.share || 0 }}</small>
+          </div>
+          <div class="stats text-muted">
+            <small *ngIf="a.now_rank">当前排名 {{ a.now_rank }}</small>
+            <small *ngIf="a.his_rank" class="ms-2">历史排名 {{ a.his_rank }}</small>
+            <!-- <small *ngIf="a.dislike !== null && a.dislike !== undefined" class="ms-2">不喜欢 {{ a.dislike }}</small> -->
+          </div>
+          <div *ngIf="a.evaluation" class="text-muted">
+            <small>评价: {{ a.evaluation }}</small>
+          </div>
+          <div class="text-muted mt-1">
+            <small>{{ a.createdStr }}</small>
           </div>
         </div>
       </article>

@@ -1,4 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import * as moment from 'moment';
 import { BiliService } from 'src/app/api/bili.service';
 
@@ -17,14 +18,25 @@ export class UpVideosComponent {
   pageSize = 12;
   total = 0;
   took = 0;
-
+  mid: any = null;
   // filters
   keywords = '';
 
-  constructor(private biliService: BiliService) {}
+  constructor(
+    private biliService: BiliService,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit() {
-    this.loadArticles();
+    // get params mid from url in angular way
+    this.route.queryParams.subscribe(params => {
+      const mid = params['mid'];
+      if (mid && !isNaN(Number(mid))) {
+        this.mid = mid;
+      }
+      this.loadArticles();
+    });
+    
   }
 
   loadArticles() {
@@ -33,13 +45,16 @@ export class UpVideosComponent {
       page: this.page,
       pageSize: this.pageSize,
       keywords: this.keywords,
+      mid: this.mid,
     };
     this.biliService.getUpVideos(params).subscribe(
       (res: any) => {
         const data = res?.data || res;
         if (data) {
           data.map((d: any) => {
-            d.createdStr = moment(Number(d.created*1000)).format('YYYY-MM-DD HH:mm');
+            d.createdStr = moment(Number(d.created * 1000)).format(
+              'YYYY-MM-DD HH:mm'
+            );
             d.author_url = `https://space.bilibili.com/${d.mid}`;
           });
           this.articles = data;
