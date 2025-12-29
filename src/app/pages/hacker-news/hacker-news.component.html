@@ -6,6 +6,27 @@
     <div class="hn-logo">Y</div>
     <div class="hn-title">Hacker News</div>
     <div class="hn-nav">
+      <div class="hn-search-wrapper">
+        <input 
+          type="text" 
+          class="hn-search-input" 
+          placeholder="搜索..."
+          [(ngModel)]="searchKeyword"
+          (keydown.enter)="onSearch()">
+        <svg 
+          class="hn-search-icon" 
+          xmlns="http://www.w3.org/2000/svg" 
+          viewBox="0 0 24 24" 
+          fill="none" 
+          stroke="currentColor" 
+          stroke-width="2" 
+          stroke-linecap="round" 
+          stroke-linejoin="round"
+          (click)="onSearch()">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
+      </div>
       <span class="hn-nav-total">{{ resp.total }} 条新闻</span>
       <span class="hn-nav-separator">|</span>
       <select
@@ -45,6 +66,9 @@
             <span class="hn-category" *ngIf="item.category">{{
               item.category
             }}</span>
+            <span class="hn-subTitle" *ngIf="item.subTitle">{{
+              item.subTitle
+            }}</span>
             <span class="hn-desc">
               <span class="hn-score">{{ item.score ?? 0 }} 分</span>
               <span class="hn-separator">|</span>
@@ -61,6 +85,9 @@
               >
                 {{ item.title }}
               </a>
+              <span class="hn-time hn-subtext">{{
+                toIsoDate(item.createdAt)
+              }}</span>
             </div>
           </td>
         </tr>
