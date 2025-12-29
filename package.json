@@ -6,7 +6,7 @@
     "start": "ng serve",
     "start:dev": "ng serve --watch --configuration local",
     "start:local": "ng serve --watch --configuration local",
-    "build": "ng build",
+    "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
