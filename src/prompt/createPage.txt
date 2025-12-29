@@ -1,0 +1,91 @@
+帮我写一个prompt 
+1.在angular 17项目中，添加一个router，地址为/hackerNews 
+2.创建service 接口 /search/getHackerNews，格式如下: 
+3.根据上面接口的数据格式，创建对应的Component 的html,ts和scss文件
+
+-------------------------
+
+你是一名资深的 Angular 17 前端工程师，请严格按照 Angular 17 的最佳实践完成以下任务：
+
+一、路由配置
+
+在现有 Angular 17 项目中新增一个路由
+
+路由地址为：/hackerNews
+
+使用 Standalone Component（如果合适），并展示完整的 app.routes.ts 或相关路由配置代码
+
+二、Service 接口
+
+创建一个 Angular Service，例如 hacker-news.service.ts
+
+在 Service 中定义接口：/search/getHackerNews
+
+使用 HttpClient 发起请求
+
+使用 Observable
+
+根据下面给定的接口返回数据格式，定义对应的 TypeScript interface
+
+接口返回数据格式如下：
+
+{
+    "total": 3129,
+    "data": [
+        {
+            "id": 46416863,
+            "state": "pending",
+            "by": "jiripik",
+            "descendants": 0,
+            "score": 2,
+            "time": 1766975629,
+            "title": "Vibe Coding for CTOs: The Real Cost of 100 Lines of Code",
+            "subTitle": null,
+            "title_cn": null,
+            "category": null,
+            "text": null,
+            "text_cn": null,
+            "type": "story",
+            "url": "https://rocketedge.com/2025/12/29/vibe-coding-for-ctos-the-real-cost-of-100-lines-of-code-ai-agents-vs-human-developers-without-losing-control/",
+            "createdAt": "2025-12-29T03:00:01.372Z",
+            "updatedAt": "2025-12-29T03:00:01.372Z"
+        },
+...],
+    "page": 1,
+    "size": 20
+}
+
+
+三、Component 实现
+
+创建与 /hackerNews 路由对应的 Component
+
+根据接口数据结构，完成以下文件：
+
+hacker-news.component.ts
+
+hacker-news.component.html
+
+hacker-news.component.scss
+
+Component 中需：
+
+调用上面创建的 Service
+
+订阅接口数据并渲染到页面
+
+合理使用 *ngFor、*ngIf
+
+HTML 页面结构清晰，字段展示语义合理
+
+SCSS 使用模块化样式，布局简洁美观（如列表、卡片等）
+
+四、其他要求
+
+代码需符合 Angular 17 规范
+
+命名清晰、注释必要
+
+如有关键设计决策，请简要说明原因
+
+所有代码请分文件清晰展示

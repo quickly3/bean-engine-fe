@@ -1,0 +1,210 @@
+// Hacker News 经典风格
+.hn-header {
+  background-color: #ff6600;
+  padding: 2px;
+  margin-bottom: 10px;
+}
+
+.hn-header-inner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 4px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.hn-logo {
+  background-color: #fff;
+  color: #ff6600;
+  font-weight: bold;
+  font-size: 14px;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #fff;
+  flex-shrink: 0;
+}
+
+.hn-title {
+  color: #000;
+  font-weight: bold;
+  font-size: 13px;
+  margin-right: auto;
+}
+
+.hn-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #000;
+}
+
+.hn-nav-total {
+  color: #000;
+}
+
+.hn-nav-separator {
+  color: #000;
+}
+
+.hn-select {
+  background: transparent;
+  border: none;
+  color: #000;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 2px 4px;
+
+  &:focus {
+    outline: 1px solid rgba(0, 0, 0, 0.2);
+  }
+}
+
+.hn-container {
+  background-color: #f6f6ef;
+  min-height: calc(100vh - 50px);
+  padding: 8px;
+}
+
+.hn-list {
+  background-color: #f6f6ef;
+  max-width: 1280px;
+  margin: 0 auto;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.hn-item {
+  td {
+    padding: 0;
+    vertical-align: middle;
+    padding-bottom: 5px;
+  }
+}
+
+.hn-rank {
+  color: #828282;
+  font-size: 14px;
+  text-align: right;
+  padding-right: 8px !important;
+  padding-top: 3px !important;
+  width: 30px;
+}
+
+.hn-title-cell {
+  padding-top: 3px !important;
+  line-height: 16px;
+}
+
+.hn-story-link {
+  color: #000;
+  font-size: 14px;
+  text-decoration: none;
+  line-height: 15px;
+
+  &:visited {
+    color: #828282;
+  }
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.hn-story-link-en {
+  color: #000;
+  font-size: 12px;
+  text-decoration: none;
+
+  &:visited {
+    color: #828282;
+  }
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.hn-category {
+  display: inline-block;
+  background-color: #ff6600;
+  color: #fff;
+  font-size: 9px;
+  padding: 1px 4px;
+  border-radius: 2px;
+  margin-left: 6px;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+.hn-desc {
+  font-size: 10px;
+}
+
+.hn-meta {
+  td {
+    padding: 0;
+  }
+}
+
+.hn-subtext {
+  font-size: 9px;
+  color: #828282;
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
+  line-height: 14px;
+}
+
+.hn-score {
+  color: #828282;
+}
+
+.hn-separator {
+  margin: 0 4px;
+  color: #828282;
+}
+
+.hn-by,
+.hn-time {
+  color: #828282;
+}
+
+.hn-spacer {
+  height: 8px;
+
+  td {
+    padding: 0;
+    height: 8px;
+  }
+}
+
+.hn-pagination {
+  max-width: 1280px;
+  margin: 20px auto;
+  padding: 0 8px;
+
+  ::ng-deep .pagination {
+    .page-link {
+      color: #000;
+      background-color: #f6f6ef;
+      border-color: #ddd;
+      font-size: 14px;
+
+      &:hover {
+        background-color: #ff6600;
+        border-color: #ff6600;
+        color: #fff;
+      }
+    }
+
+    .page-item.active .page-link {
+      background-color: #ff6600;
+      border-color: #ff6600;
+      color: #fff;
+    }
+  }
+}

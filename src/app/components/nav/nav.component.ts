@@ -16,6 +16,8 @@ export class NavComponent implements OnInit {
     { label: '36氪新闻', value: 'kr-news' },
     { label: 'Github最热项目', value: 'github' },
     { label: '图表', value: 'chart' },
+    { label: 'HackerNews', value: 'hackerNews' },
+
 
 ];
   constructor(public router: Router) {

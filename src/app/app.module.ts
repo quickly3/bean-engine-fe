@@ -20,11 +20,14 @@ import { ChartComponent } from './pages/chart/chart.component';
 import { BiliUpComponent } from './pages/bili-up/bili-up.component';
 import { UpVideosComponent } from './pages/up-videos/up-videos.component';
 import { UpAnalysisComponent } from './pages/up-analysis/up-analysis.component';
+import { NumberUnitPipe } from './pipes/number-unit.pipe';
+import { HackerNewsComponent } from './pages/hacker-news/hacker-news.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     SearchComponent,
+    NumberUnitPipe,
     BiliUpComponent,
     UpVideosComponent,
     UpAnalysisComponent,
@@ -35,6 +38,7 @@ import { UpAnalysisComponent } from './pages/up-analysis/up-analysis.component';
     GraphComponent,
     ...SubGraphComponents.allComponents,
     SubGraphComponents.subComponents,
+    HackerNewsComponent,
   ],
   imports: [
     BrowserModule,

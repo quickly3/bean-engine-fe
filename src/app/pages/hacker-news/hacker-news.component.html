@@ -1,0 +1,83 @@
+<app-nav></app-nav>
+
+<!-- Hacker News 风格的头部 -->
+<div class="hn-header">
+  <div class="hn-header-inner">
+    <div class="hn-logo">Y</div>
+    <div class="hn-title">Hacker News</div>
+    <div class="hn-nav">
+      <span class="hn-nav-total">{{ resp.total }} 条新闻</span>
+      <span class="hn-nav-separator">|</span>
+      <select
+        class="hn-select"
+        (change)="onCategoryChange($any($event.target).value)"
+      >
+        <option
+          *ngFor="let c of categories"
+          [value]="c"
+          [selected]="c === selectedCategory"
+        >
+          {{ c }}
+        </option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<!-- HN 风格的内容区 -->
+<div class="hn-container">
+  <table class="hn-list" cellspacing="0">
+    <tbody>
+      <ng-container *ngFor="let item of resp.data; let i = index">
+        <tr class="hn-item">
+          <td class="hn-title-cell">
+            <span class="hn-rank"
+              >{{ (resp.page - 1) * resp.size + i + 1 }}.</span
+            >
+            <a
+              [href]="item.url || '#'"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="hn-story-link"
+            >
+              {{ item.title_cn || item.title || "(无标题)" }}
+            </a>
+            <span class="hn-category" *ngIf="item.category">{{
+              item.category
+            }}</span>
+            <span class="hn-desc">
+              <span class="hn-score">{{ item.score ?? 0 }} 分</span>
+              <span class="hn-separator">|</span>
+              <span class="hn-by">by {{ item.by || "匿名" }}</span>
+              <span class="hn-separator">|</span>
+              <span class="hn-time">{{ formatTime(item.createdAt) }}</span>
+            </span>
+            <div>
+              <a
+                [href]="item.url || '#'"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="hn-story-link-en"
+              >
+                {{ item.title }}
+              </a>
+            </div>
+          </td>
+        </tr>
+      </ng-container>
+    </tbody>
+  </table>
+
+  <!-- 分页 -->
+  <div class="hn-pagination">
+    <ngb-pagination
+      [collectionSize]="resp.total"
+      [(page)]="resp.page"
+      [pageSize]="resp.size"
+      [maxSize]="5"
+      [ellipses]="false"
+      size="sm"
+      (pageChange)="onPageChange()"
+    ></ngb-pagination>
+  </div>
+</div>

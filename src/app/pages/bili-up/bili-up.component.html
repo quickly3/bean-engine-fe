@@ -25,15 +25,19 @@
       </div>
       <div class="col-md-4 search-mode">
         <div ngbDropdown class="d-inline-block sort-by">
-          <button
+          排序方式: <button
             class="btn btn-outline-primary btn-sm"
             id="dropdownBasic1"
             ngbDropdownToggle
           >
-            排序方式
+            {{ queryParams.sortBy?.label }}
           </button>
           <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-            <button ngbDropdownItem *ngFor="let item of sortItems">
+            <button
+              ngbDropdownItem
+              *ngFor="let item of sortItems"
+              (click)="changeSort(item)"
+            >
               {{ item.label }}
             </button>
           </div>
@@ -81,19 +85,19 @@
               alt="{{ up.uname }}"
               width="60" height="60"
             /> -->
-            <div class="flex-grow-1 ms-2">
-              <div class="d-flex align-items-center">
+            <div class="flex-grow-1">
+              <div class="align-items-center">
                 <a
                   class="fw-bold"
                   href="https://space.bilibili.com/{{ up.mid }}"
                   target="_blank"
                   >{{ up.uname }}</a
                 >
-                <span
-                  *ngIf="up.official_verify?.desc"
-                  class="badge bg-info ms-2"
-                  >{{ up.official_verify.desc }}</span
-                >
+              </div>
+              <div class="align-items-center">
+                <span *ngIf="up.official_verify?.desc" class="badge bg-info">{{
+                  up.official_verify.desc
+                }}</span>
               </div>
               <div class="text-muted" style="font-size: 13px">
                 {{ up.sign }}
@@ -105,6 +109,20 @@
                 >
                 <span *ngIf="up.totalVideos !== undefined" class="ms-2"
                   >总发布视频: {{ up.totalVideos }}</span
+                >
+              </div>
+              <div class="text-muted mt-2" style="font-size: 13px">
+                <span *ngIf="up.follower !== undefined" class="me-3"
+                  >粉丝: <strong>{{ up.follower | numberUnit }}</strong></span
+                >
+                <span *ngIf="up.following !== undefined" class="me-3"
+                  >关注: <strong>{{ up.following }}</strong></span
+                >
+                <span *ngIf="up.likes !== undefined" class="me-3"
+                  >获赞: <strong>{{ up.likes | numberUnit }}</strong></span
+                >
+                <span *ngIf="up.view !== undefined" class="me-3"
+                  >播放: <strong>{{ up.view | numberUnit }}</strong></span
                 >
               </div>
               <div>
