@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { HackerNewsService } from '../../api/hacker-news.service';
 
 @Component({
@@ -13,20 +13,31 @@ export class HackerNewsComponent {
     size: 20,
     total: 0,
   };
-  // 用于模板上的分类筛选（'所有' 表示不过滤）
-  selectedCategory = '所有';
+  // 用于模板上的分类筛选（空字符串表示不过滤）
+  selectedCategory = '';
   categories: string[] = [
     '所有',
-    '安全 / 隐私 / 情报',
-    '其他',
-    '科技 / 互联网',
-    '军事 / 战争 / 国际冲突',
-    '法律 / 反垄断 / 合规',
     '人工智能 / AI 应用',
-    '科学研究',
-    '政治 / 政策 / 监管',
-    '地理 / 地图 / 科学研究',
-    '工具 / 产品 / 软件推荐',
+    '开发者工具 / 库 / 语言生态',
+    '后端 / 数据库 / 数据工程',
+    '安全 / 漏洞 / 隐私',
+    '产品 / 公司 / 商业新闻',
+    '硬件 / 芯片 / 基础设施',
+    '科学研究 / 太空',
+    '生物医药 / 健康',
+    '政策 / 法律 / 监管',
+    '社交平台 / 内容 / 媒体生态',
+    '隐私 / 伦理议题',
+    '开源 / 社区项目',
+    '教程 / 实践 / 技术深度文章',
+    '产品评测 / 硬件拆解',
+    '游戏 / 娱乐',
+    '文化 / 社会 / 人文议题',
+    '物流 / 出行 / 自动驾驶',
+    '调查报道 / 泄露档案',
+    '经济 / 金融市场',
+    '小工具 / 实用脚本 / 命令行',
+    '其他',
   ];
 
   constructor(private hackerNewsService: HackerNewsService) {}
@@ -58,16 +69,48 @@ export class HackerNewsComponent {
     this.getHackerNews();
   }
 
+  @HostListener('window:keydown', ['$event'])
+  handleKeydown(event: KeyboardEvent): void {
+    const target = event.target as HTMLElement | null;
+    const tag = target?.tagName?.toUpperCase();
+    if (
+      tag === 'INPUT' ||
+      tag === 'TEXTAREA' ||
+      tag === 'SELECT' ||
+      (target?.isContentEditable ?? false)
+    ) {
+      return;
+    }
+
+    if (event.key === 'ArrowLeft') {
+      if (this.resp.page > 1) {
+        this.resp.page = Math.max(1, this.resp.page - 1);
+        this.onPageChange();
+      }
+    } else if (event.key === 'ArrowRight') {
+      if (this.resp.page < this.totalPages) {
+        this.resp.page = Math.min(this.totalPages, this.resp.page + 1);
+        this.onPageChange();
+      }
+    }
+  }
+
   formatTime(dateStr: string): string {
     if (!dateStr) return '';
     const date = new Date(dateStr);
     const now = new Date();
     const diff = Math.floor((now.getTime() - date.getTime()) / 1000);
-    
+
     if (diff < 60) return `${diff} 秒前`;
     if (diff < 3600) return `${Math.floor(diff / 60)} 分钟前`;
     if (diff < 86400) return `${Math.floor(diff / 3600)} 小时前`;
     if (diff < 2592000) return `${Math.floor(diff / 86400)} 天前`;
     return `${Math.floor(diff / 2592000)} 月前`;
+  }
+
+  get totalPages(): number {
+    const total = this.resp?.total ?? 0;
+    const size = this.resp?.size ?? 1;
+    return Math.max(1, Math.ceil(total / size));
   }
 }
