@@ -208,3 +208,138 @@
     }
   }
 }
+
+/* 移动端“加载更多”按钮：默认隐藏，移动端显示 */
+.hn-load-more {
+  display: none;
+}
+
+// Mobile 优化（移动优先补充）
+@media (max-width: 600px) {
+  .hn-header-inner {
+    padding: 8px 10px;
+    gap: 10px;
+  }
+
+  .hn-logo {
+    width: 28px;
+    height: 28px;
+    font-size: 16px;
+  }
+
+  .hn-title {
+    font-size: 16px;
+  }
+
+  .hn-nav {
+    font-size: 13px;
+    gap: 6px;
+  }
+
+  .hn-container {
+    padding: 6px;
+    min-height: calc(100vh - 64px);
+  }
+
+  /* 把表格式列表转换为卡片式布局，便于触控 */
+  .hn-list {
+    display: block;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  .hn-list tbody {
+    display: block;
+  }
+
+  .hn-item {
+    display: block;
+    border-bottom: 1px solid #e6e6e6;
+    padding: 10px 6px;
+    background: #fff;
+    margin-bottom: 6px;
+    border-radius: 6px;
+  }
+
+  .hn-item td {
+    display: block;
+    padding: 0;
+  }
+
+  .hn-rank {
+    display: inline-block;
+    width: auto;
+    padding-right: 8px !important;
+    font-size: 14px;
+    color: #666;
+    vertical-align: top;
+  }
+
+  .hn-title-cell {
+    display: block;
+    margin-left: 0;
+    padding-top: 0 !important;
+    line-height: 1.2;
+  }
+
+  .hn-story-link {
+    display: block;
+    font-size: 16px;
+    line-height: 1.3;
+    padding-bottom: 6px;
+    color: #111;
+  }
+
+  .hn-story-link-en {
+    display: block;
+    font-size: 13px;
+    color: #666;
+    margin-top: 4px;
+  }
+
+  .hn-desc {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 12px;
+    color: #666;
+    margin-top: 6px;
+  }
+
+  .hn-category {
+    font-size: 11px;
+    padding: 2px 6px;
+  }
+
+  .hn-pagination {
+    padding: 10px 8px;
+    margin: 12px 0;
+  }
+
+  /* 触控友好 */
+  .hn-story-link,
+  .hn-select,
+  .page-link {
+    -webkit-tap-highlight-color: rgba(0,0,0,0.06);
+  }
+
+  .hn-load-more {
+    display: block;
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 16px;
+    background-color: #ff6600;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    margin: 10px 0 4px 0;
+  }
+
+  .hn-load-more:active {
+    transform: translateY(1px);
+  }
+}

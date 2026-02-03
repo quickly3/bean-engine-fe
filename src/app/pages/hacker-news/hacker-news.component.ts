@@ -59,6 +59,26 @@ export class HackerNewsComponent {
       });
   }
 
+  // 用于移动端“加载更多” —— 在当前数据后追加下一页
+  loadMore(): void {
+    const nextPage = (this.resp.page || 1) + 1;
+    if (nextPage > this.totalPages) return;
+
+    this.hackerNewsService
+      .getHackerNews({
+        page: nextPage,
+        size: this.resp.size,
+        category: this.selectedCategory,
+      })
+      .subscribe((resp: any) => {
+        // 将新页追加到现有数据中
+        this.resp.data = [...(this.resp.data || []), ...(resp.data || [])];
+        this.resp.page = resp.page;
+        this.resp.total = resp.total;
+        this.resp.size = resp.size;
+      });
+  }
+
   onCategoryChange(category: string): void {
     this.selectedCategory = category;
     this.resp.page = 1; // 切换分类时重置页码
