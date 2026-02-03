@@ -1,5 +1,6 @@
 import { Component, HostListener } from '@angular/core';
 import { HackerNewsService } from '../../api/hacker-news.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-hacker-news',
@@ -14,7 +15,7 @@ export class HackerNewsComponent {
     total: 0,
   };
   // 用于模板上的分类筛选（空字符串表示不过滤）
-  selectedCategory = '';
+  searchKeyword = '';
   categories: string[] = [
     '所有',
     '人工智能 / AI 应用',
@@ -39,6 +40,8 @@ export class HackerNewsComponent {
     '小工具 / 实用脚本 / 命令行',
     '其他',
   ];
+  selectedCategory = this.categories[0];
+
 
   constructor(private hackerNewsService: HackerNewsService) {}
 
@@ -52,6 +55,7 @@ export class HackerNewsComponent {
         page: this.resp.page,
         size: this.resp.size,
         category: this.selectedCategory,
+        searchKeyword: this.searchKeyword,
       })
       .subscribe((resp: any) => {
         console.log(resp);
@@ -86,6 +90,11 @@ export class HackerNewsComponent {
   }
 
   onPageChange(): void {
+    this.getHackerNews();
+  }
+
+  onSearch(): void {
+    this.resp.page = 1;
     this.getHackerNews();
   }
 
@@ -126,6 +135,11 @@ export class HackerNewsComponent {
     if (diff < 86400) return `${Math.floor(diff / 3600)} 小时前`;
     if (diff < 2592000) return `${Math.floor(diff / 86400)} 天前`;
     return `${Math.floor(diff / 2592000)} 月前`;
+  }
+
+  toIsoDate(dateStr: string): string {
+    if (!dateStr) return '';
+    return moment(dateStr).format('YYYY-MM-DD HH:mm:ss');
   }
 
   get totalPages(): number {
