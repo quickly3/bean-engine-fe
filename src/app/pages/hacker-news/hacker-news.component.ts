@@ -41,7 +41,7 @@ export class HackerNewsComponent {
     '其他',
   ];
   selectedCategory = this.categories[0];
-  levelOptions = ['all', '1', '2', '3', '4', '5'];
+  levelOptions = ['all', '5', '4', '3', '2', '1'];
   selectedLevel = 'all';
 
 
