@@ -1,0 +1,14 @@
+.star-rating {
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 0.9rem;
+  line-height: 1;
+}
+.star {
+  color: #d6d6d6;
+  margin-right: 2px;
+  font-size: 1rem;
+}
+.star.filled {
+  color: #f5b301; /* gold */
+}

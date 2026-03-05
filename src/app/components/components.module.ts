@@ -6,6 +6,7 @@ import PieComponent from './graph/pie/pie.component';
 import BubbleComponent from './graph/bubble/bubble.component';
 import DensityCalendarComponent from './graph/density-calendar/density-calendar.component';
 import WordCloudComponent from './graph/word-cloud/word-cloud.component';
+import { StarRatingComponent } from './star-rating/star-rating.component';
 
 import TagsModalComponent from './modal/tags-modal/tags-modal.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -18,6 +19,7 @@ import { MarkdownModule } from 'ngx-markdown';
     HorizontalBarComponent,
     PieComponent,
     TagsModalComponent,
+    StarRatingComponent,
     BubbleComponent,
     DensityCalendarComponent,
     WordCloudComponent,
@@ -28,6 +30,7 @@ import { MarkdownModule } from 'ngx-markdown';
     HorizontalBarComponent,
     PieComponent,
     TagsModalComponent,
+    StarRatingComponent,
     BubbleComponent,
     DensityCalendarComponent,
     WordCloudComponent,

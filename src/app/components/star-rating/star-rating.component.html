@@ -1,0 +1,5 @@
+<span class="star-rating" role="img" attr.aria-label="Level {{level}} of {{max}}">
+  <ng-container *ngFor="let i of range">
+    <span class="star" [class.filled]="i < level">★</span>
+  </ng-container>
+</span>

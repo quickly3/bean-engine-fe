@@ -66,6 +66,7 @@
             <span class="hn-category" *ngIf="item.category">{{
               item.category
             }}</span>
+            <app-star-rating *ngIf="item.level" [level]="item.level" [max]="5" class="hn-level"></app-star-rating>
             <span class="hn-subTitle" *ngIf="item.subTitle">{{
               item.subTitle
             }}</span>
