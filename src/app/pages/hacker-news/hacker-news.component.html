@@ -41,6 +41,19 @@
           {{ c }}
         </option>
       </select>
+      <span class="hn-nav-separator">|</span>
+      <select
+        class="hn-select"
+        (change)="onLevelChange($any($event.target).value)"
+      >
+        <option
+          *ngFor="let level of levelOptions"
+          [value]="level"
+          [selected]="level === selectedLevel"
+        >
+          {{ level === 'all' ? '所有等级' : 'Level ' + level }}
+        </option>
+      </select>
     </div>
   </div>
 </div>

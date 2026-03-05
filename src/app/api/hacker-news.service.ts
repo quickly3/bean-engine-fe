@@ -14,6 +14,7 @@ export interface HackerNewsItem {
   subTitle?: string | null;
   title_cn?: string | null;
   category?: string | null;
+  level?: number | null;
   text?: string | null;
   text_cn?: string | null;
   type?: string | null;

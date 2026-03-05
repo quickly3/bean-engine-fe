@@ -41,6 +41,8 @@ export class HackerNewsComponent {
     '其他',
   ];
   selectedCategory = this.categories[0];
+  levelOptions = ['all', '1', '2', '3', '4', '5'];
+  selectedLevel = 'all';
 
 
   constructor(private hackerNewsService: HackerNewsService) {}
@@ -56,6 +58,7 @@ export class HackerNewsComponent {
         size: this.resp.size,
         category: this.selectedCategory,
         searchKeyword: this.searchKeyword,
+        level: this.selectedLevel === 'all' ? null : parseInt(this.selectedLevel),
       })
       .subscribe((resp: any) => {
         console.log(resp);
@@ -72,8 +75,7 @@ export class HackerNewsComponent {
       .getHackerNews({
         page: nextPage,
         size: this.resp.size,
-        category: this.selectedCategory,
-      })
+        category: this.selectedCategory,        level: this.selectedLevel === 'all' ? null : parseInt(this.selectedLevel),      })
       .subscribe((resp: any) => {
         // 将新页追加到现有数据中
         this.resp.data = [...(this.resp.data || []), ...(resp.data || [])];
@@ -86,6 +88,12 @@ export class HackerNewsComponent {
   onCategoryChange(category: string): void {
     this.selectedCategory = category;
     this.resp.page = 1; // 切换分类时重置页码
+    this.getHackerNews();
+  }
+
+  onLevelChange(level: string): void {
+    this.selectedLevel = level;
+    this.resp.page = 1; // 切换筛选时重置页码
     this.getHackerNews();
   }
 
