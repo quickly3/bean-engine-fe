@@ -1,0 +1,1113 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/getAll": {
+      "post": {
+        "operationId": "AppController_getAll",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "搜索参数",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "搜索结果"
+          }
+        },
+        "summary": "全量搜索（根路由）",
+        "tags": [
+          "app"
+        ]
+      }
+    },
+    "/search/getAll": {
+      "post": {
+        "operationId": "SearchController_getAll",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "综合检索结果"
+          }
+        },
+        "summary": "综合检索",
+        "tags": [
+          "search"
+        ]
+      }
+    },
+    "/search/getTags": {
+      "get": {
+        "operationId": "SearchController_getTags",
+        "parameters": [
+          {
+            "name": "keyword",
+            "required": false,
+            "in": "query",
+            "description": "搜索关键词",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "标签列表"
+          }
+        },
+        "summary": "获取标签列表",
+        "tags": [
+          "search"
+        ]
+      }
+    },
+    "/search/getCategories": {
+      "get": {
+        "operationId": "SearchController_getCategories",
+        "parameters": [
+          {
+            "name": "keyword",
+            "required": false,
+            "in": "query",
+            "description": "搜索关键词",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "分类列表"
+          }
+        },
+        "summary": "获取分类列表",
+        "tags": [
+          "search"
+        ]
+      }
+    },
+    "/search/autoComplete": {
+      "get": {
+        "operationId": "SearchController_autoComplete",
+        "parameters": [
+          {
+            "name": "keyword",
+            "required": false,
+            "in": "query",
+            "description": "补全关键词",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "自动补全结果"
+          }
+        },
+        "summary": "自动补全",
+        "tags": [
+          "search"
+        ]
+      }
+    },
+    "/search/getArticleHistogram": {
+      "post": {
+        "operationId": "SearchController_getArticleHistogram",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "文章趋势直方图"
+          }
+        },
+        "summary": "获取文章趋势直方图",
+        "tags": [
+          "search"
+        ]
+      }
+    },
+    "/search/getWordsCloudByQueryBuilder": {
+      "post": {
+        "operationId": "SearchController_getWordsCloudByQueryBuilder",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "词云结果"
+          }
+        },
+        "summary": "通过查询条件获取词云",
+        "tags": [
+          "search"
+        ]
+      }
+    },
+    "/search/getAuthorTermsAgg": {
+      "post": {
+        "operationId": "SearchController_getAuthorTermsAgg",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "作者词项聚合结果"
+          }
+        },
+        "summary": "获取作者词项聚合",
+        "tags": [
+          "search"
+        ]
+      }
+    },
+    "/search/getTagsTermsAgg": {
+      "post": {
+        "operationId": "SearchController_getTagsTermsAgg",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "标签词项聚合结果"
+          }
+        },
+        "summary": "获取标签词项聚合",
+        "tags": [
+          "search"
+        ]
+      }
+    },
+    "/search/getCatesTermsAgg": {
+      "post": {
+        "operationId": "SearchController_getCatesTermsAgg",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "分类词项聚合结果"
+          }
+        },
+        "summary": "获取分类词项聚合",
+        "tags": [
+          "search"
+        ]
+      }
+    },
+    "/search/getWordsCloud": {
+      "get": {
+        "operationId": "SearchController_getWordsCloud",
+        "parameters": [
+          {
+            "name": "keyword",
+            "required": false,
+            "in": "query",
+            "description": "可选关键词",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "词云结果"
+          }
+        },
+        "summary": "获取词云",
+        "tags": [
+          "search"
+        ]
+      }
+    },
+    "/search/getHackerNews": {
+      "post": {
+        "operationId": "SearchController_getHackerNews",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Hacker News 查询结果"
+          }
+        },
+        "summary": "获取 Hacker News 数据",
+        "tags": [
+          "search"
+        ]
+      }
+    },
+    "/author/getAuthors": {
+      "post": {
+        "operationId": "AuthorController_getAll",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "作者列表结果"
+          }
+        },
+        "summary": "获取作者列表",
+        "tags": [
+          "author"
+        ]
+      }
+    },
+    "/article/getHistogram": {
+      "post": {
+        "operationId": "ArticleController_getHistogram",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "统计参数",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "query": {
+                    "type": "object",
+                    "description": "查询条件"
+                  },
+                  "calendar_interval": {
+                    "type": "string",
+                    "description": "时间间隔"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "文章直方图结果"
+          }
+        },
+        "summary": "获取文章直方图",
+        "tags": [
+          "article"
+        ]
+      }
+    },
+    "/article/getAuthorTermsAgg": {
+      "post": {
+        "operationId": "ArticleController_getAll",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "聚合参数",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "作者聚合结果"
+          }
+        },
+        "summary": "获取作者聚合统计",
+        "tags": [
+          "article"
+        ]
+      }
+    },
+    "/graph/getTotalGraph": {
+      "get": {
+        "operationId": "GraphController_getTotalGraph",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "全量图谱数据"
+          }
+        },
+        "summary": "获取全量关系图数据",
+        "tags": [
+          "graph"
+        ]
+      }
+    },
+    "/graph/getLastDayData": {
+      "get": {
+        "operationId": "GraphController_getLastDayData",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "最近一天图谱数据"
+          }
+        },
+        "summary": "获取最近一天图谱数据",
+        "tags": [
+          "graph"
+        ]
+      }
+    },
+    "/graph/getTagsAgg": {
+      "post": {
+        "operationId": "GraphController_getTagsAgg",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "标签聚合查询参数",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "标签聚合结果"
+          }
+        },
+        "summary": "获取标签聚合数据",
+        "tags": [
+          "graph"
+        ]
+      }
+    },
+    "/graph/dailyMd": {
+      "get": {
+        "operationId": "GraphController_dailyMd",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "日报 Markdown 文本"
+          }
+        },
+        "summary": "获取日报 Markdown 内容",
+        "tags": [
+          "graph"
+        ]
+      }
+    },
+    "/graph/dailyKr": {
+      "get": {
+        "operationId": "GraphController_dailyKr",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "36Kr 日报数据"
+          }
+        },
+        "summary": "获取 36Kr 日报内容",
+        "tags": [
+          "graph"
+        ]
+      }
+    },
+    "/graph/dailyGitHub": {
+      "get": {
+        "operationId": "GraphController_dailyGitHub",
+        "parameters": [
+          {
+            "name": "date",
+            "required": false,
+            "in": "query",
+            "description": "可选日期参数",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "GitHub 日报数据"
+          }
+        },
+        "summary": "获取 GitHub 日报内容",
+        "tags": [
+          "graph"
+        ]
+      }
+    },
+    "/cron/hacknews/ai-daily-report": {
+      "get": {
+        "operationId": "CronController_getAiDailyReport",
+        "parameters": [
+          {
+            "name": "date",
+            "required": false,
+            "in": "query",
+            "description": "日期，格式 YYYY-MM-DD，默认今天",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "查询当天 HackerNews AI 新闻并生成日报",
+        "tags": [
+          "cron"
+        ]
+      }
+    },
+    "/feishu/event/openai": {
+      "post": {
+        "operationId": "FeishuController_event",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "处理成功返回 true"
+          }
+        },
+        "summary": "接收飞书 OpenAI 事件回调",
+        "tags": [
+          "feishu"
+        ]
+      }
+    },
+    "/feishu/event/gemini": {
+      "post": {
+        "operationId": "FeishuController_eventGemini",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "处理成功返回 true"
+          }
+        },
+        "summary": "接收飞书 Gemini 事件回调",
+        "tags": [
+          "feishu"
+        ]
+      }
+    },
+    "/ai/openai": {
+      "post": {
+        "operationId": "AiController_openai",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "OpenAI 请求参数",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "content": {
+                    "type": "string",
+                    "description": "提示词内容"
+                  },
+                  "session_id": {
+                    "type": "string",
+                    "description": "会话 ID"
+                  }
+                },
+                "required": [
+                  "content"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OpenAI 返回结果"
+          }
+        },
+        "summary": "调用 OpenAI 聊天接口",
+        "tags": [
+          "ai"
+        ]
+      }
+    },
+    "/ai/deepseek": {
+      "post": {
+        "operationId": "AiController_deepseek",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "DeepSeek 返回结果"
+          }
+        },
+        "summary": "调用 DeepSeek 聊天接口",
+        "tags": [
+          "ai"
+        ]
+      }
+    },
+    "/ai/gemini": {
+      "post": {
+        "operationId": "AiController_gemini",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "Gemini 请求参数",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "content": {
+                    "oneOf": [
+                      {
+                        "type": "string",
+                        "description": "提示词文本"
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "content": {
+                            "type": "string",
+                            "description": "消息内容"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "content"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Gemini 返回结果"
+          }
+        },
+        "summary": "调用 Gemini 聊天接口",
+        "tags": [
+          "ai"
+        ]
+      }
+    },
+    "/data/getGdpData": {
+      "post": {
+        "operationId": "DataController_getGdpData",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "GDP 数据列表"
+          }
+        },
+        "summary": "获取 GDP CSV 数据",
+        "tags": [
+          "data"
+        ]
+      }
+    },
+    "/bili/getUps": {
+      "post": {
+        "operationId": "BiliController_getUps",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "page": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "pageSize": {
+                    "type": "number",
+                    "example": 20
+                  },
+                  "keywords": {
+                    "type": "string"
+                  },
+                  "sortBy": {
+                    "type": "string",
+                    "example": "lastPublish"
+                  }
+                },
+                "required": [
+                  "page",
+                  "pageSize",
+                  "sortBy"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "UP 主分页数据"
+          }
+        },
+        "summary": "获取 B 站 UP 主列表",
+        "tags": [
+          "bili"
+        ]
+      }
+    },
+    "/bili/getUpVideos": {
+      "post": {
+        "operationId": "BiliController_getUpVideos",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "page": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "pageSize": {
+                    "type": "number",
+                    "example": 20
+                  },
+                  "mid": {
+                    "type": "string",
+                    "description": "UP 主 mid"
+                  }
+                },
+                "required": [
+                  "page",
+                  "pageSize",
+                  "mid"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "UP 主视频分页数据"
+          }
+        },
+        "summary": "获取 UP 主视频列表",
+        "tags": [
+          "bili"
+        ]
+      }
+    },
+    "/bili/getUpAnalysis": {
+      "post": {
+        "operationId": "BiliController_getUpAnalysis",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "analysisId": {
+                    "type": "number",
+                    "description": "分析记录 ID"
+                  }
+                },
+                "required": [
+                  "analysisId"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "UP 主分析结果"
+          }
+        },
+        "summary": "获取 UP 主分析数据",
+        "tags": [
+          "bili"
+        ]
+      }
+    },
+    "/wbg/data-sources": {
+      "get": {
+        "operationId": "WbgQueryController_getDataSources",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "页码，默认 1",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "description": "每页数量，默认 20，最大 100",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "code",
+            "required": false,
+            "in": "query",
+            "description": "按数据源编码模糊查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "keyword",
+            "required": false,
+            "in": "query",
+            "description": "按名称（中/英）模糊查询",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "WbgDataSource 分页结果",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "list": [
+                      {
+                        "id": 1,
+                        "lastupdated": "2021-08-18",
+                        "name": "Doing Business",
+                        "name_cn": "营商环境",
+                        "code": "DBS",
+                        "databid": "3001",
+                        "description": "",
+                        "url": "",
+                        "dataavailability": "Y",
+                        "metadataavailability": "Y",
+                        "concepts": "3"
+                      }
+                    ],
+                    "total": 1,
+                    "page": 1,
+                    "pageSize": 20
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "查询 WbgDataSource 列表",
+        "tags": [
+          "wbg"
+        ]
+      }
+    },
+    "/wbg/indicators": {
+      "get": {
+        "operationId": "WbgQueryController_getIndicators",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "页码，默认 1",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "description": "每页数量，默认 20，最大 100",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "sourceId",
+            "required": false,
+            "in": "query",
+            "description": "按 sourceId 精确过滤",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "indicator",
+            "required": false,
+            "in": "query",
+            "description": "按 indicator 模糊查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "keyword",
+            "required": false,
+            "in": "query",
+            "description": "按 value/value_cn 模糊查询",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "WbgIndicator 分页结果",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "list": [
+                      {
+                        "id": 1,
+                        "sourceId": 1,
+                        "indicator": "NY.GDP.MKTP.CD",
+                        "value": "GDP (current US$)",
+                        "value_cn": "国内生产总值（现价美元）"
+                      }
+                    ],
+                    "total": 1,
+                    "page": 1,
+                    "pageSize": 20
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "查询 WbgIndicator 列表",
+        "tags": [
+          "wbg"
+        ]
+      }
+    },
+    "/wbg/indicators-with-data-source": {
+      "get": {
+        "operationId": "WbgQueryController_getIndicatorsWithDataSource",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "页码，默认 1",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "description": "每页数量，默认 20，最大 100",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "sourceId",
+            "required": false,
+            "in": "query",
+            "description": "按 sourceId 精确过滤",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "indicator",
+            "required": false,
+            "in": "query",
+            "description": "按 indicator 模糊查询",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "keyword",
+            "required": false,
+            "in": "query",
+            "description": "按 value/value_cn 模糊查询",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "WbgIndicator（含 dataSource）分页结果",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "list": [
+                      {
+                        "id": 4763,
+                        "sourceId": 1,
+                        "indicator": "ENF.CONT.COEN.ATDR",
+                        "value": "Enforcing contracts: Alternative dispute resolution (0-3) (DB16-20 methodology)",
+                        "value_cn": null,
+                        "dataSource": {
+                          "id": 1,
+                          "lastupdated": "2021-08-18",
+                          "name": "Doing Business",
+                          "name_cn": "营商环境",
+                          "code": "DBS",
+                          "databid": "3001",
+                          "description": "",
+                          "url": "",
+                          "dataavailability": "Y",
+                          "metadataavailability": "Y",
+                          "concepts": "3"
+                        }
+                      }
+                    ],
+                    "total": 1,
+                    "page": 1,
+                    "pageSize": 20
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "查询 WbgIndicator 列表（含 dataSource）",
+        "tags": [
+          "wbg"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Bean Engine API",
+    "description": "Bean Engine backend API documentation",
+    "version": "1.0.0",
+    "contact": {
+
+    }
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "schemas": {
+
+    }
+  }
+}

@@ -22,6 +22,7 @@ import { UpVideosComponent } from './pages/up-videos/up-videos.component';
 import { UpAnalysisComponent } from './pages/up-analysis/up-analysis.component';
 import { NumberUnitPipe } from './pipes/number-unit.pipe';
 import { HackerNewsComponent } from './pages/hacker-news/hacker-news.component';
+import { WbgComponent } from './pages/wbg/wbg.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { HackerNewsComponent } from './pages/hacker-news/hacker-news.component';
     ...SubGraphComponents.allComponents,
     SubGraphComponents.subComponents,
     HackerNewsComponent,
+    WbgComponent,
   ],
   imports: [
     BrowserModule,

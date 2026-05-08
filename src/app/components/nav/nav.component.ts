@@ -17,6 +17,7 @@ export class NavComponent implements OnInit {
     { label: 'Github最热项目', value: 'github' },
     { label: '图表', value: 'chart' },
     { label: 'HackerNews', value: 'hackerNews' },
+    { label: 'WBG指标', value: 'wbg' },
 
 
 ];

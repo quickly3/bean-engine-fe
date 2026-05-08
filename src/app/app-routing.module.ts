@@ -10,6 +10,7 @@ import { BiliUpComponent } from './pages/bili-up/bili-up.component';
 import { UpVideosComponent } from './pages/up-videos/up-videos.component';
 import { UpAnalysisComponent } from './pages/up-analysis/up-analysis.component';
 import { HackerNewsComponent } from './pages/hacker-news/hacker-news.component';
+import { WbgComponent } from './pages/wbg/wbg.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'search', pathMatch: 'full' },
@@ -23,6 +24,7 @@ const routes: Routes = [
   { path: 'up-videos', component: UpVideosComponent },
   { path: 'up-analysis', component: UpAnalysisComponent },
   { path: 'hackerNews', component: HackerNewsComponent },
+  { path: 'wbg', component: WbgComponent },
 ];
 
 @NgModule({
