@@ -1,0 +1,19 @@
+.table-wrap {
+  overflow-x: auto;
+  max-height: 520px;
+}
+
+.card-header {
+  font-weight: 600;
+}
+
+.cell-truncate {
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nowrap {
+  white-space: nowrap;
+}

@@ -1,0 +1,298 @@
+<div class="row g-3 mt-1">
+  <div class="col-12 col-xl-4">
+    <div class="card h-100">
+      <div class="card-header">已选指标数据查询</div>
+      <div class="card-body">
+        <div class="mb-2">
+          <label class="form-label">已选指标</label>
+          <div class="selected-indicator-box mono">
+            {{ selectedIndicatorId || '请先在 Indicators 结果表中选择一个指标' }}
+          </div>
+        </div>
+
+        <div class="mb-2">
+          <label class="form-label">countryCode（多选）</label>
+          <div ngbDropdown class="w-100" autoClose="outside">
+            <button
+              class="btn btn-outline-secondary w-100 text-start country-dropdown-toggle"
+              ngbDropdownToggle
+              [disabled]="loadingCountries"
+            >
+              {{ getCountrySelectionLabel() }}
+            </button>
+
+            <div ngbDropdownMenu class="w-100 country-dropdown-menu">
+              <div class="country-dropdown-header">
+                <div class="form-check mb-0">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="country-all"
+                    [checked]="isAllCountriesSelected()"
+                    (change)="toggleAllCountries($any($event.target).checked)"
+                  />
+                  <label class="form-check-label" for="country-all">
+                    全部国家（默认 all）
+                  </label>
+                </div>
+
+                <div class="input-group input-group-sm mt-2">
+                  <input
+                    class="form-control"
+                    type="text"
+                    placeholder="输入国家 id 或 name（如 cn / china）"
+                    [ngModel]="countryKeyword"
+                    (ngModelChange)="onCountryKeywordChange($event)"
+                    (keydown.enter)="onCountryKeywordEnter($event)"
+                  />
+                  <button
+                    class="btn btn-outline-primary"
+                    type="button"
+                    [disabled]="!countryKeyword.trim()"
+                    (click)="addMatchedCountries()"
+                  >
+                    添加匹配项
+                  </button>
+                </div>
+                <div class="form-text country-filter-tip">
+                  支持匹配选项对象的 id、iso2Code 和 name。
+                </div>
+              </div>
+
+              <div class="country-groups-wrap">
+                <div class="country-group" *ngFor="let group of filteredCountryGroups; trackBy: trackByRegion">
+                  <div class="country-group-title">{{ group.regionValue }}</div>
+                  <div class="country-item" *ngFor="let country of group.items; trackBy: trackByCountry">
+                    <div class="form-check mb-0">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        [id]="'country-' + country.iso2Code"
+                        [checked]="isCountrySelected(country.iso2Code)"
+                        (change)="toggleCountrySelection(country.iso2Code, $any($event.target).checked)"
+                      />
+                      <label
+                        class="form-check-label"
+                        [for]="'country-' + country.iso2Code"
+                      >
+                        {{ country.name }} ({{ country.id }}) ({{ country.iso2Code }})
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  *ngIf="!loadingCountries && filteredCountryGroups.length === 0"
+                  class="text-muted small p-2"
+                >
+                  无匹配国家
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-text">
+            未选择时按 all 查询；可多选后使用分号拼接请求。
+          </div>
+
+          <div class="selected-countries-box mt-2" *ngIf="indicatorDataQuery.countryCodes.length > 0">
+            <div class="selected-countries-title">已选择国家（{{ indicatorDataQuery.countryCodes.length }}）</div>
+            <div class="selected-countries-list">
+              <span class="selected-country-item" *ngFor="let country of getSelectedCountries(); trackBy: trackByCountry">
+                {{ country.name }} ({{ country.id }}) ({{ country.iso2Code }})
+                <button
+                  class="selected-country-remove"
+                  type="button"
+                  title="移除该国家"
+                  aria-label="移除该国家"
+                  (click)="removeSelectedCountry(country.iso2Code)"
+                >
+                  &times;
+                </button>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-2">
+          <label class="form-label">快捷国家组</label>
+          <div class="quick-country-groups">
+            <button
+              type="button"
+              class="btn btn-sm btn-outline-secondary"
+              *ngFor="let group of quickCountryGroups"
+              (click)="addCountryGroupByIds(group.countryIds)"
+            >
+              添加 {{ group.label }}
+            </button>
+          </div>
+          <div class="form-text">可一键添加预设国家组到已选 countryCode。</div>
+        </div>
+
+        <div class="mb-2">
+          <label class="form-label">时间范围（年份）</label>
+          <div class="row g-2">
+            <div class="col-6">
+              <div class="input-group">
+                <input
+                  class="form-control"
+                  placeholder="开始年份"
+                  name="startDate"
+                  ngbDatepicker
+                  #startDatePicker="ngbDatepicker"
+                  [minDate]="minDate"
+                  [maxDate]="maxDate"
+                  [startDate]="minDate"
+                  [navigation]="'select'"
+                  [(ngModel)]="indicatorDataQuery.startDate"
+                  (keydown.enter)="confirm.emit()"
+                />
+                <button
+                  class="btn btn-outline-secondary"
+                  type="button"
+                  (click)="startDatePicker.toggle()"
+                >
+                  <i class="fa-regular fa-calendar"></i>
+                </button>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="input-group">
+                <input
+                  class="form-control"
+                  placeholder="结束年份"
+                  name="endDate"
+                  ngbDatepicker
+                  #endDatePicker="ngbDatepicker"
+                  [minDate]="minDate"
+                  [maxDate]="maxDate"
+                  [startDate]="maxDate"
+                  [navigation]="'select'"
+                  [(ngModel)]="indicatorDataQuery.endDate"
+                  (keydown.enter)="confirm.emit()"
+                />
+                <button
+                  class="btn btn-outline-secondary"
+                  type="button"
+                  (click)="endDatePicker.toggle()"
+                >
+                  <i class="fa-regular fa-calendar"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="form-text">默认范围：1960 至 {{ maxYear }}</div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">每页数量</label>
+          <select class="form-select" [(ngModel)]="indicatorDataQuery.per_page">
+            <option [ngValue]="10">10</option>
+            <option [ngValue]="20">20</option>
+            <option [ngValue]="50">50</option>
+            <option [ngValue]="100">100</option>
+          </select>
+        </div>
+
+        <div class="d-flex gap-2 flex-wrap">
+          <button
+            class="btn btn-primary"
+            [disabled]="!selectedIndicatorId"
+            (click)="confirm.emit()"
+          >
+            确认并查询
+          </button>
+          <button class="btn btn-outline-secondary" (click)="reset.emit()">
+            清空结果
+          </button>
+        </div>
+
+        <div class="text-danger small mt-2" *ngIf="indicatorDataError">
+          {{ indicatorDataError }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-xl-8">
+    <div class="card h-100">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span>Indicator Data 结果（{{ indicatorDataResp.meta.total }}）</span>
+        <div class="d-flex align-items-center gap-2">
+          <button
+            type="button"
+            class="btn btn-sm btn-outline-primary"
+            [disabled]="indicatorDataResp.list.length === 0"
+            (click)="openFullscreenChart()"
+          >
+            全屏查看图表
+          </button>
+          <span class="small text-muted" *ngIf="loadingIndicatorData">加载中...</span>
+        </div>
+      </div>
+      <div class="card-body table-wrap">
+        <div class="mb-3">
+          <app-indicator-trend-chart [dataList]="indicatorDataResp.list"></app-indicator-trend-chart>
+        </div>
+
+        <table class="table table-sm table-striped align-middle">
+          <thead>
+            <tr>
+              <th>Country</th>
+              <th>Country ISO3</th>
+              <th>Date</th>
+              <th>Value</th>
+              <th>Unit</th>
+              <th>Obs Status</th>
+              <th>Decimal</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of indicatorDataResp.list">
+              <td>{{ item.country?.value || '-' }}</td>
+              <td>{{ item.countryiso3code || '-' }}</td>
+              <td class="nowrap">{{ item.date || '-' }}</td>
+              <td>{{ item.value ?? '-' }}</td>
+              <td>{{ item.unit || '-' }}</td>
+              <td>{{ item.obs_status || '-' }}</td>
+              <td>{{ item.decimal ?? '-' }}</td>
+            </tr>
+            <tr *ngIf="!loadingIndicatorData && indicatorDataResp.list.length === 0">
+              <td colspan="7" class="text-center text-muted">暂无数据</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card-footer d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <span class="small text-muted">
+          当前指标：{{ selectedIndicatorId || '-' }}
+        </span>
+        <ngb-pagination
+          [collectionSize]="indicatorDataResp.meta.total"
+          [(page)]="indicatorDataQuery.page"
+          [pageSize]="+indicatorDataResp.meta.per_page"
+          [maxSize]="5"
+          size="sm"
+          (pageChange)="pageChange.emit($event)"
+        ></ngb-pagination>
+      </div>
+    </div>
+  </div>
+
+  <div class="fullscreen-chart-overlay" *ngIf="showFullscreenChart" (click)="closeFullscreenChart()">
+    <div class="fullscreen-chart-dialog" (click)="$event.stopPropagation()">
+      <div class="fullscreen-chart-header">
+        <div class="fw-semibold">Indicator Data 趋势图（全屏）</div>
+        <button
+          type="button"
+          class="btn btn-sm btn-outline-secondary"
+          (click)="closeFullscreenChart()"
+        >
+          关闭
+        </button>
+      </div>
+      <div class="fullscreen-chart-body">
+        <app-indicator-trend-chart [dataList]="indicatorDataResp.list"></app-indicator-trend-chart>
+      </div>
+    </div>
+  </div>
+</div>

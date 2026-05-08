@@ -23,6 +23,12 @@ import { UpAnalysisComponent } from './pages/up-analysis/up-analysis.component';
 import { NumberUnitPipe } from './pipes/number-unit.pipe';
 import { HackerNewsComponent } from './pages/hacker-news/hacker-news.component';
 import { WbgComponent } from './pages/wbg/wbg.component';
+import { DataSourcesPanelComponent } from './pages/wbg/components/data-sources-panel/data-sources-panel.component';
+import { IndicatorsPanelComponent } from './pages/wbg/components/indicators-panel/indicators-panel.component';
+import { IndicatorDataPanelComponent } from './pages/wbg/components/indicator-data-panel/indicator-data-panel.component';
+import { IndicatorTrendChartComponent } from './pages/wbg/components/indicator-trend-chart/indicator-trend-chart.component';
+import { NgxEchartsModule } from 'ngx-echarts';
+import * as echarts from 'echarts';
 
 @NgModule({
   declarations: [
@@ -41,6 +47,10 @@ import { WbgComponent } from './pages/wbg/wbg.component';
     SubGraphComponents.subComponents,
     HackerNewsComponent,
     WbgComponent,
+    DataSourcesPanelComponent,
+    IndicatorsPanelComponent,
+    IndicatorDataPanelComponent,
+    IndicatorTrendChartComponent,
   ],
   imports: [
     BrowserModule,
@@ -52,6 +62,7 @@ import { WbgComponent } from './pages/wbg/wbg.component';
     FontAwesomeModule,
     NuMarkdownModule.forRoot(),
     MarkdownModule.forRoot(),
+    NgxEchartsModule.forRoot({ echarts }),
   ],
   providers: [],
   bootstrap: [AppComponent],

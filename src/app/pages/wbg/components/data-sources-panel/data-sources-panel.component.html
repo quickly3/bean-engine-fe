@@ -1,0 +1,126 @@
+<div class="row g-3">
+  <div class="col-12 col-xl-4">
+    <div class="card h-100">
+      <div class="card-header">Data Sources 查询</div>
+      <div class="card-body">
+        <div class="mb-2">
+          <label class="form-label">编码 code</label>
+          <input
+            class="form-control"
+            [(ngModel)]="sourceQuery.code"
+            (keydown.enter)="search.emit()"
+            placeholder="例如 DBS"
+          />
+        </div>
+
+        <div class="mb-2">
+          <label class="form-label">关键词 keyword（中/英名称）</label>
+          <input
+            class="form-control"
+            [(ngModel)]="sourceQuery.keyword"
+            (keydown.enter)="search.emit()"
+            placeholder="例如 Doing"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">每页数量</label>
+          <select class="form-select" [(ngModel)]="sourceQuery.pageSize">
+            <option [ngValue]="10">10</option>
+            <option [ngValue]="20">20</option>
+            <option [ngValue]="50">50</option>
+            <option [ngValue]="100">100</option>
+          </select>
+        </div>
+
+        <div class="d-flex gap-2">
+          <button class="btn btn-primary" (click)="search.emit()">查询</button>
+          <button class="btn btn-outline-secondary" (click)="reset.emit()">
+            重置
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-xl-8">
+    <div class="card h-100">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span>Data Sources 结果（{{ sourceResp.total }}）</span>
+        <span class="small text-muted" *ngIf="loadingSources">加载中...</span>
+      </div>
+      <div class="card-body table-wrap">
+        <table class="table table-sm table-striped align-middle">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Code</th>
+              <th>Name</th>
+              <th>Name CN</th>
+              <th>Last Updated</th>
+              <th>Data BID</th>
+              <th>Data Availability</th>
+              <th>Metadata Availability</th>
+              <th>Concepts</th>
+              <th>URL</th>
+              <th>Description</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of sourceResp.list">
+              <td>{{ item.id }}</td>
+              <td>{{ item.code }}</td>
+              <td>
+                <ngb-highlight [result]="item.name || '-'" [term]="sourceQuery.keyword"></ngb-highlight>
+              </td>
+              <td>
+                <ngb-highlight [result]="item.name_cn || '-'" [term]="sourceQuery.keyword"></ngb-highlight>
+              </td>
+              <td class="nowrap">{{ item.lastupdated || '-' }}</td>
+              <td>{{ item.databid || '-' }}</td>
+              <td>{{ item.dataavailability || '-' }}</td>
+              <td>{{ item.metadataavailability || '-' }}</td>
+              <td>{{ item.concepts || '-' }}</td>
+              <td>
+                <a
+                  *ngIf="item.url"
+                  [href]="item.url"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  查看
+                </a>
+                <span *ngIf="!item.url">-</span>
+              </td>
+              <td class="cell-truncate" [title]="item.description || ''">
+                {{ item.description || '-' }}
+              </td>
+              <td>
+                <button
+                  class="btn btn-link btn-sm p-0"
+                  (click)="onApplySourceFilter(item.id)"
+                >
+                  用此 sourceId 查询指标
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="!loadingSources && sourceResp.list.length === 0">
+              <td colspan="12" class="text-center text-muted">暂无数据</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card-footer d-flex justify-content-end">
+        <ngb-pagination
+          [collectionSize]="sourceResp.total"
+          [(page)]="sourceQuery.page"
+          [pageSize]="sourceQuery.pageSize"
+          [maxSize]="5"
+          size="sm"
+          (pageChange)="pageChange.emit($event)"
+        ></ngb-pagination>
+      </div>
+    </div>
+  </div>
+</div>

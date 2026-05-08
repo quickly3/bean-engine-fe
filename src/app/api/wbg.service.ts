@@ -25,4 +25,8 @@ export class WbgService {
       params,
     });
   };
+
+  getCountries = (params: any) => {
+    return this.http.get(this.apiURL + '/wbg/countries', { params });
+  };
 }

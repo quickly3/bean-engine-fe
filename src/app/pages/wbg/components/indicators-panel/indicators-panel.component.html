@@ -1,0 +1,146 @@
+<div class="row g-3 mt-1">
+  <div class="col-12 col-xl-4">
+    <div class="card h-100">
+      <div class="card-header">Indicators 查询</div>
+      <div class="card-body">
+        <div class="mb-2">
+          <label class="form-label">sourceId</label>
+          <input
+            class="form-control"
+            type="number"
+            [(ngModel)]="indicatorQuery.sourceId"
+            (keydown.enter)="search.emit()"
+            placeholder="例如 1"
+          />
+        </div>
+
+        <div class="mb-2">
+          <label class="form-label">indicator</label>
+          <input
+            class="form-control"
+            [(ngModel)]="indicatorQuery.indicator"
+            (keydown.enter)="search.emit()"
+            placeholder="例如 NY.GDP.MKTP.CD"
+          />
+        </div>
+
+        <div class="mb-2">
+          <label class="form-label">关键词 keyword（value/value_cn）</label>
+          <input
+            class="form-control"
+            [(ngModel)]="indicatorQuery.keyword"
+            (keydown.enter)="search.emit()"
+            placeholder="例如 GDP"
+          />
+        </div>
+
+        <div class="mb-2">
+          <label class="form-label">接口模式</label>
+          <select
+            class="form-select"
+            [ngModel]="includeDataSource"
+            (ngModelChange)="onIncludeModeChange($event)"
+          >
+            <option [ngValue]="false">/wbg/indicators</option>
+            <option [ngValue]="true">/wbg/indicators-with-data-source</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">每页数量</label>
+          <select class="form-select" [(ngModel)]="indicatorQuery.pageSize">
+            <option [ngValue]="10">10</option>
+            <option [ngValue]="20">20</option>
+            <option [ngValue]="50">50</option>
+            <option [ngValue]="100">100</option>
+          </select>
+        </div>
+
+        <div class="d-flex gap-2">
+          <button class="btn btn-primary" (click)="search.emit()">查询</button>
+          <button class="btn btn-outline-secondary" (click)="reset.emit()">
+            重置
+          </button>
+          <button
+            *ngIf="indicatorQuery.sourceId"
+            class="btn btn-outline-danger"
+            (click)="clearSourceFilter.emit()"
+          >
+            清除 sourceId
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-xl-8">
+    <div class="card h-100">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span>Indicators 结果（{{ indicatorResp.total }}）</span>
+        <span class="small text-muted" *ngIf="loadingIndicators">加载中...</span>
+      </div>
+      <div class="card-body table-wrap">
+        <table class="table table-sm table-hover align-middle">
+          <thead>
+            <tr>
+              <th>选择</th>
+              <th>ID</th>
+              <th>Source ID</th>
+              <th>Indicator</th>
+              <th>Value</th>
+              <th>Value CN</th>
+              <th *ngIf="includeDataSource">DataSource</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of indicatorResp.list">
+              <td>
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="selectedIndicator"
+                  [value]="item.indicator"
+                  [checked]="selectedIndicatorId === item.indicator"
+                  (change)="onIndicatorSelectionChange(item)"
+                />
+              </td>
+              <td>{{ item.id }}</td>
+              <td>{{ item.sourceId }}</td>
+              <td class="mono">
+                <ngb-highlight
+                  [result]="item.indicator || '-'"
+                  [term]="indicatorQuery.indicator"
+                ></ngb-highlight>
+              </td>
+              <td>
+                <ngb-highlight [result]="item.value || '-'" [term]="indicatorQuery.keyword"></ngb-highlight>
+              </td>
+              <td>
+                <ngb-highlight [result]="item.value_cn || '-'" [term]="indicatorQuery.keyword"></ngb-highlight>
+              </td>
+              <td *ngIf="includeDataSource">
+                <div>{{ item.dataSource?.name || '-' }}</div>
+                <small class="text-muted">{{ item.dataSource?.code || '' }}</small>
+              </td>
+            </tr>
+            <tr *ngIf="!loadingIndicators && indicatorResp.list.length === 0">
+              <td [attr.colspan]="includeDataSource ? 7 : 6" class="text-center text-muted">
+                暂无数据
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card-footer d-flex justify-content-end">
+        <ngb-pagination
+          [collectionSize]="indicatorResp.total"
+          [(page)]="indicatorQuery.page"
+          [pageSize]="indicatorQuery.pageSize"
+          [maxSize]="5"
+          size="sm"
+          (pageChange)="pageChange.emit($event)"
+        ></ngb-pagination>
+      </div>
+    </div>
+  </div>
+</div>
