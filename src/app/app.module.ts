@@ -27,6 +27,7 @@ import { DataSourcesPanelComponent } from './pages/wbg/components/data-sources-p
 import { IndicatorsPanelComponent } from './pages/wbg/components/indicators-panel/indicators-panel.component';
 import { IndicatorDataPanelComponent } from './pages/wbg/components/indicator-data-panel/indicator-data-panel.component';
 import { IndicatorTrendChartComponent } from './pages/wbg/components/indicator-trend-chart/indicator-trend-chart.component';
+import { IndicatorBarRaceChartComponent } from './pages/wbg/components/indicator-bar-race-chart/indicator-bar-race-chart.component';
 import { NgxEchartsModule } from 'ngx-echarts';
 import * as echarts from 'echarts';
 
@@ -51,6 +52,7 @@ import * as echarts from 'echarts';
     IndicatorsPanelComponent,
     IndicatorDataPanelComponent,
     IndicatorTrendChartComponent,
+    IndicatorBarRaceChartComponent,
   ],
   imports: [
     BrowserModule,

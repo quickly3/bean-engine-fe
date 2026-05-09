@@ -47,7 +47,7 @@ export class WbgComponent {
   indicatorDataQuery = {
     countryCodes: [] as string[],
     page: 1,
-    per_page: 1000,
+    per_page: 2000,
     startDate: { year: this.minYear, month: 1, day: 1 } as NgbDateStruct,
     endDate: { year: this.maxYear, month: 12, day: 31 } as NgbDateStruct,
   };
@@ -77,7 +77,7 @@ export class WbgComponent {
     meta: {
       page: 1,
       pages: 0,
-      per_page: '1000',
+      per_page: '2000',
       total: 0,
     },
     list: [] as any[],

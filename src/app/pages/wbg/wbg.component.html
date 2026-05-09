@@ -1,13 +1,35 @@
 <app-nav></app-nav>
 
 <div class="container-fluid wbg-page">
-  <div class="row">
-    <div class="col-12">
-      <div class="wbg-header">
-        <h3>World Bank 指标查询</h3>
-        <p class="text-muted mb-0">
-          数据接口：/wbg/data-sources、/wbg/indicators、/wbg/indicators-with-data-source、#sym:getIndicatorData
-        </p>
+  <div class="wbg-header-wrap">
+    <div class="row align-items-start g-3">
+      <div class="col-12 col-xxl-8">
+        <div class="wbg-header">
+          <div class="wbg-header-kicker">Global Data Explorer</div>
+          <h3>World Bank 指标查询</h3>
+          <p class="mb-0">
+            数据接口：/wbg/data-sources、/wbg/indicators、/wbg/indicators-with-data-source、#sym:getIndicatorData
+          </p>
+        </div>
+      </div>
+
+      <div class="col-12 col-xxl-4">
+        <div class="wbg-stats-grid">
+          <div class="wbg-stat-item">
+            <div class="wbg-stat-label">Data Sources</div>
+            <div class="wbg-stat-value">{{ sourceResp.total || 0 }}</div>
+          </div>
+          <div class="wbg-stat-item">
+            <div class="wbg-stat-label">Indicators</div>
+            <div class="wbg-stat-value">{{ indicatorResp.total || 0 }}</div>
+          </div>
+          <div class="wbg-stat-item wbg-stat-item-wide">
+            <div class="wbg-stat-label">当前指标</div>
+            <div class="wbg-stat-value wbg-stat-code">
+              {{ selectedIndicatorId || '-' }}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

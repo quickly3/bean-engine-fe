@@ -118,8 +118,9 @@
           <div class="quick-country-groups">
             <button
               type="button"
-              class="btn btn-sm btn-outline-secondary"
+              class="badge rounded-pill quick-country-badge"
               *ngFor="let group of quickCountryGroups"
+              [ngStyle]="group.badgeStyle"
               (click)="addCountryGroupByIds(group.countryIds)"
             >
               添加 {{ group.label }}
@@ -281,7 +282,7 @@
   <div class="fullscreen-chart-overlay" *ngIf="showFullscreenChart" (click)="closeFullscreenChart()">
     <div class="fullscreen-chart-dialog" (click)="$event.stopPropagation()">
       <div class="fullscreen-chart-header">
-        <div class="fw-semibold">Indicator Data 趋势图（全屏）</div>
+        <div class="fw-semibold">Indicator Data 条形图赛跑（全屏）</div>
         <button
           type="button"
           class="btn btn-sm btn-outline-secondary"
@@ -291,7 +292,7 @@
         </button>
       </div>
       <div class="fullscreen-chart-body">
-        <app-indicator-trend-chart [dataList]="indicatorDataResp.list"></app-indicator-trend-chart>
+        <app-indicator-bar-race-chart [dataList]="indicatorDataResp.list"></app-indicator-bar-race-chart>
       </div>
     </div>
   </div>

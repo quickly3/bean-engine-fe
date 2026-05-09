@@ -53,6 +53,15 @@ export class IndicatorTrendChartComponent implements OnChanges {
       (a, b) => Number(a) - Number(b)
     );
 
+    // years 数据有可能是 2025Q3 这种格式 ，检查一下，如果是这种格式，按照年份排序
+    if (years.some((year) => /\d{4}Q\d/.test(year))) {
+      years.sort((a, b) => {
+        const [aYear, aQuarter] = a.split('Q').map(Number);
+        const [bYear, bQuarter] = b.split('Q').map(Number);
+        return aYear === bYear ? aQuarter - bQuarter : aYear - bYear;
+      });
+    }
+
     const countryCountMap = rows.reduce<Record<string, number>>((acc, item) => {
       acc[item.country] = (acc[item.country] || 0) + 1;
       return acc;
@@ -60,7 +69,7 @@ export class IndicatorTrendChartComponent implements OnChanges {
 
     const topCountries = Object.entries(countryCountMap)
       .sort((a, b) => b[1] - a[1])
-      .slice(0, 5)
+      .slice(0, 10)
       .map(([country]) => country);
 
     const series = topCountries.map((country) => ({

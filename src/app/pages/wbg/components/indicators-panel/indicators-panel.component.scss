@@ -1,13 +1,114 @@
-.table-wrap {
-  overflow-x: auto;
-  max-height: 520px;
+.row {
+  --panel-border: #d8e4ef;
+  --panel-ink: #163149;
+  --panel-soft-ink: #647a91;
 }
 
-.mono {
-  font-family: Consolas, 'Courier New', monospace;
-  font-size: 12px;
+.card {
+  border: 1px solid var(--panel-border);
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.97), rgba(251, 253, 255, 0.92));
+  box-shadow: 0 14px 30px rgba(20, 45, 72, 0.09);
+  overflow: hidden;
 }
 
 .card-header {
-  font-weight: 600;
+  border-bottom: 1px solid #e5edf4;
+  font-weight: 700;
+  color: var(--panel-ink);
+  background: linear-gradient(90deg, rgba(4, 102, 200, 0.08), rgba(0, 168, 150, 0.06));
+}
+
+.card-body {
+  padding: 14px;
+}
+
+.card-footer {
+  border-top: 1px solid #e8eef5;
+  background: rgba(248, 251, 255, 0.72);
+}
+
+.form-label {
+  margin-bottom: 4px;
+  color: var(--panel-soft-ink);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.form-control,
+.form-select {
+  border-radius: 10px;
+  border-color: #cddaea;
+
+  &:focus {
+    border-color: #3995e9;
+    box-shadow: 0 0 0 0.2rem rgba(57, 149, 233, 0.18);
+  }
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #0675db, #0288d1);
+  border-color: transparent;
+}
+
+.table-wrap {
+  overflow-x: auto;
+  max-height: 560px;
+  border: 1px solid #e4ecf5;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.mono {
+  font-family: 'JetBrains Mono', Consolas, 'Courier New', monospace;
+  font-size: 12px;
+}
+
+.table {
+  margin-bottom: 0;
+
+  thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: #f1f7fc;
+    color: #2f4a66;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+    border-bottom-width: 1px;
+  }
+
+  tbody td {
+    font-size: 13px;
+    color: #26415b;
+    border-color: #edf2f8;
+  }
+}
+
+.table-hover > tbody > tr:hover > * {
+  --bs-table-accent-bg: rgba(232, 244, 255, 0.66);
+}
+
+.form-check-input {
+  border-color: #a6c6e8;
+
+  &:checked {
+    background-color: #0a73d9;
+    border-color: #0a73d9;
+  }
+}
+
+:host ::ng-deep ngb-pagination .page-link {
+  border-radius: 8px;
+  border-color: #d5e2f0;
+  color: #30506f;
+}
+
+:host ::ng-deep ngb-pagination .page-item.active .page-link {
+  background-color: #0a73d9;
+  border-color: #0a73d9;
+  color: #fff;
 }

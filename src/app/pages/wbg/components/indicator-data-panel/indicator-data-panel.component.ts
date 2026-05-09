@@ -17,9 +17,22 @@ type CountryGroup = { regionValue: string; items: CountryItem[] };
   styleUrls: ['./indicator-data-panel.component.scss'],
 })
 export class IndicatorDataPanelComponent implements OnChanges {
-  readonly quickCountryGroups: { label: string; countryIds: string[] }[] = [
-    { label: '油管五常', countryIds: ['IND', 'KOR', 'VNM', 'TUR', 'POL'] },
-    { label: '真·五常', countryIds: ["CHN", "FRA", "RUS", "GBR", "USA"] },
+  private readonly quickCountryBadgePalette = [
+    { background: '#e3f2fd', color: '#0f4c81', border: '#b6dbfb' },
+    { background: '#e8f7ef', color: '#1f6b46', border: '#bfe5cf' },
+    { background: '#fdecef', color: '#9f2f45', border: '#f8c9d3' },
+    { background: '#fff4db', color: '#916000', border: '#f3d48a' },
+    { background: '#e9f7fb', color: '#0c667a', border: '#bde4ee' },
+    { background: '#f0edf9', color: '#5a4b8a', border: '#d7cff0' },
+  ];
+
+  readonly quickCountryGroups: {
+    label: string;
+    countryIds: string[];
+    badgeStyle: Record<string, string>;
+  }[] = [
+    this.createQuickCountryGroup('油管五常', ['IND', 'KOR', 'VNM', 'TUR', 'POL']),
+    this.createQuickCountryGroup('真·五常', ['CHN', 'FRA', 'RUS', 'GBR', 'USA']),
   ];
 
   @Input() selectedIndicatorId = '';
@@ -227,5 +240,27 @@ export class IndicatorDataPanelComponent implements OnChanges {
       country.iso2Code.toLowerCase().includes(keyword) ||
       country.name.toLowerCase().includes(keyword)
     );
+  }
+
+  private createQuickCountryGroup(label: string, countryIds: string[]): {
+    label: string;
+    countryIds: string[];
+    badgeStyle: Record<string, string>;
+  } {
+    const badgeIndex = Array.from(label).reduce(
+      (sum, char) => sum + char.charCodeAt(0),
+      0
+    ) % this.quickCountryBadgePalette.length;
+    const palette = this.quickCountryBadgePalette[badgeIndex];
+
+    return {
+      label,
+      countryIds,
+      badgeStyle: {
+        backgroundColor: palette.background,
+        color: palette.color,
+        borderColor: palette.border,
+      },
+    };
   }
 }
