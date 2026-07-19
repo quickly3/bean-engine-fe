@@ -12,10 +12,12 @@
     "test": "ng test",
     "tauri": "tauri",
     "tauri:dev": "tauri dev",
+    "tauri:prod": "tauri dev --config ./src-tauri/tauri.prod.conf.json",
     "tauri:build": "tauri build",
     "tauri:build:dev": "tauri build --config ./src-tauri/tauri.dev.conf.json",
     "tauri:build:local": "tauri build --config ./src-tauri/tauri.local.conf.json",
-    "tauri:build:prod": "tauri build --config ./src-tauri/tauri.prod.conf.json"
+    "tauri:build:prod": "tauri build --config ./src-tauri/tauri.prod.conf.json",
+    "tauri:build:prod:debug": "tauri build --debug --config ./src-tauri/tauri.prod.conf.json"
   },
   "private": true,
   "dependencies": {
