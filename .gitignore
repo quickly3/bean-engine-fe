@@ -40,4 +40,8 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
-/src-tauri
+
+# Tauri / Rust
+/src-tauri/target
+/src-tauri/gen
+/src-tauri/icons
