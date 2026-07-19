@@ -8,7 +8,10 @@
     "start:local": "ng serve --watch --configuration local",
     "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "tauri": "tauri",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build"
   },
   "private": true,
   "dependencies": {
@@ -52,6 +55,7 @@
     "@angular/cli": "~17.1.0",
     "@angular/compiler-cli": "^17.1.0",
     "@angular/localize": "^17.1.0",
+    "@tauri-apps/cli": "^2.11.4",
     "@types/d3": "^7.4.0",
     "@types/d3-cloud": "^1.2.5",
     "@types/jasmine": "~4.3.0",
