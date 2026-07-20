@@ -38,6 +38,7 @@
     "@ng-util/markdown": "^17.0.1",
     "@observablehq/plot": "^0.6.6",
     "@popperjs/core": "^2.11.8",
+    "@tauri-apps/plugin-opener": "^2.5.4",
     "@types/lodash": "^4.17.16",
     "bootstrap": "^5.2.3",
     "bootstrap-icons": "^1.10.5",
