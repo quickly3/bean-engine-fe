@@ -89,6 +89,43 @@
               <span class="hn-by">by {{ item.by || "匿名" }}</span>
               <span class="hn-separator">|</span>
               <span class="hn-time">{{ formatTime(item.createdAt) }}</span>
+              <ng-container *ngIf="showSummaryBtn(item)">
+                <span class="hn-separator">|</span>
+                <button
+                  type="button"
+                  class="hn-md-btn"
+                  (click)="toggleMarkdown(item, 'summary_cn')"
+                >
+                  {{ item._showSummary ? "收起摘要" : "摘要" }}
+                </button>
+              </ng-container>
+              <ng-container *ngIf="showContentBtn(item)">
+                <span class="hn-separator">|</span>
+                <button
+                  type="button"
+                  class="hn-md-btn"
+                  (click)="toggleMarkdown(item, 'content')"
+                >
+                  {{ item._showContent ? "收起内容" : "内容" }}
+                </button>
+              </ng-container>
+              <ng-container *ngIf="showFetchBtn(item)">
+                <span class="hn-separator">|</span>
+                <button
+                  type="button"
+                  class="hn-md-btn hn-fetch-btn"
+                  [disabled]="item._fetching"
+                  (click)="fetchContent(item)"
+                >
+                  {{ fetchBtnText(item) }}
+                </button>
+              </ng-container>
+              <span
+                class="hn-job-badge"
+                *ngIf="showJobBadge(item)"
+                [ngClass]="jobBadgeClass(item)"
+                >{{ jobBadgeText(item) }}</span
+              >
             </span>
             <div>
               <a
@@ -102,6 +139,19 @@
               <span class="hn-time hn-subtext">{{
                 toIsoDate(item.createdAt)
               }}</span>
+            </div>
+
+            <!-- 摘要（Markdown） -->
+            <div
+              class="hn-md-panel"
+              *ngIf="item._showSummary && item.summary_cn"
+            >
+              <markdown [data]="item.summary_cn" [disableSanitizer]="false"></markdown>
+            </div>
+
+            <!-- 正文内容（Markdown） -->
+            <div class="hn-md-panel" *ngIf="item._showContent && item.content">
+              <markdown [data]="item.content" [disableSanitizer]="false"></markdown>
             </div>
           </td>
         </tr>

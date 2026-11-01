@@ -3,6 +3,13 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
+export enum HackNewsSummaryJobStatus {
+  PENDING = 'pending',
+  PROCESSING = 'processing',
+  SUCCESS = 'success',
+  FAILED = 'failed',
+}
+
 export interface HackerNewsItem {
   id: number;
   state: string | null;
@@ -19,6 +26,9 @@ export interface HackerNewsItem {
   text_cn?: string | null;
   type?: string | null;
   url?: string | null;
+  content?: string | null;
+  summary_cn?: string | null;
+  fetchStatus?: HackNewsSummaryJobStatus | null;
   createdAt?: string | null;
   updatedAt?: string | null;
 }
@@ -47,5 +57,13 @@ export class HackerNewsService {
       this.apiURL + '/search/getHackerNews',
       params
     );
+  }
+
+  /**
+   * 触发后端抓取某条 hacker news 的内容
+   * @param id hacker news 记录 id
+   */
+  summarizeJob(id: number): Observable<any> {
+    return this.http.post(this.apiURL + '/hacknews/summarize-jobs', { id });
   }
 }

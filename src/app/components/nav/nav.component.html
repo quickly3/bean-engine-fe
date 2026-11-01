@@ -36,6 +36,109 @@
           >
         </li>
       </ul>
+      <ul class="navbar-nav nav-auth">
+        <li class="nav-item" *ngIf="!isLoggedIn">
+          <button
+            type="button"
+            class="btn btn-outline-light btn-login"
+            (click)="openLogin()"
+          >
+            登录
+          </button>
+        </li>
+        <li class="nav-item" *ngIf="isLoggedIn">
+          <button
+            type="button"
+            class="btn btn-outline-light btn-login"
+            (click)="openProfile()"
+          >
+            Profile<ng-container *ngIf="displayName">（{{ displayName }}）</ng-container>
+          </button>
+        </li>
+      </ul>
     </div>
   </div>
 </nav>
+
+<div class="nav-modal-mask" *ngIf="showLoginModal" (click)="closeLogin()">
+  <div class="nav-modal" (click)="$event.stopPropagation()">
+    <div class="nav-modal-header">
+      <h5 class="nav-modal-title">登录</h5>
+      <button
+        type="button"
+        class="btn-close"
+        aria-label="关闭"
+        (click)="closeLogin()"
+      ></button>
+    </div>
+    <form class="nav-modal-body" (ngSubmit)="submitLogin()">
+      <div class="mb-3">
+        <label class="form-label" for="nav-login-username">用户名</label>
+        <input
+          id="nav-login-username"
+          class="form-control"
+          name="username"
+          autocomplete="username"
+          [(ngModel)]="loginForm.username"
+        />
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="nav-login-password">密码</label>
+        <input
+          id="nav-login-password"
+          type="password"
+          class="form-control"
+          name="password"
+          autocomplete="current-password"
+          [(ngModel)]="loginForm.password"
+        />
+      </div>
+      <p class="text-danger mb-2" *ngIf="loginError">{{ loginError }}</p>
+      <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-secondary me-2" (click)="closeLogin()">
+          取消
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="loginLoading">
+          {{ loginLoading ? '登录中...' : '登录' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="nav-modal-mask" *ngIf="showProfileModal" (click)="closeProfile()">
+  <div class="nav-modal" (click)="$event.stopPropagation()">
+    <div class="nav-modal-header">
+      <h5 class="nav-modal-title">Profile</h5>
+      <button
+        type="button"
+        class="btn-close"
+        aria-label="关闭"
+        (click)="closeProfile()"
+      ></button>
+    </div>
+    <div class="nav-modal-body">
+      <p class="text-muted mb-0" *ngIf="profileLoading">加载中...</p>
+      <p class="text-danger mb-0" *ngIf="profileError">{{ profileError }}</p>
+      <table
+        class="table table-sm mb-0"
+        *ngIf="!profileLoading && userEntries.length"
+      >
+        <tbody>
+          <tr *ngFor="let item of userEntries">
+            <th scope="row">{{ item.key }}</th>
+            <td>{{ item.value }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="d-flex justify-content-between mt-3">
+        <button type="button" class="btn btn-outline-danger" (click)="logout()">
+          退出登录
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="closeProfile()">
+          关闭
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { NavComponent } from './nav/nav.component';
 import HorizontalBarComponent from './graph/horizontal-bar/horizontal-bar.component';
 import PieComponent from './graph/pie/pie.component';
@@ -13,7 +14,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { MarkdownModule } from 'ngx-markdown';
 
 @NgModule({
-  imports: [CommonModule, FontAwesomeModule, MarkdownModule],
+  imports: [CommonModule, FormsModule, FontAwesomeModule, MarkdownModule],
   declarations: [
     NavComponent,
     HorizontalBarComponent,
