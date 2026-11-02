@@ -291,16 +291,17 @@ export class HackerNewsComponent implements OnDestroy {
     });
   }
 
-  // 当抓取任务已出结果（正文/摘要已生成）时，停止对该条目的轮询
+  // 当抓取任务真正结束（成功/失败）时，停止对该条目的轮询
+  // 注意：正文可能先于任务结束返回，不能以 content/summary_cn 是否为空作为结束条件
   private syncPollingIds(items: any[]): void {
     this.pollingIds.forEach((id) => {
       const item: any = items.find((it: any) => it.id === id);
       if (!item) return;
-      if (
-        item.content ||
-        item.summary_cn ||
-        item.fetchStatus === HackNewsSummaryJobStatus.FAILED
-      ) {
+      const finished =
+        item.fetchStatus === HackNewsSummaryJobStatus.SUCCESS ||
+        item.fetchStatus === HackNewsSummaryJobStatus.FAILED ||
+        (!item.fetchStatus && !!item.content && !!item.summary_cn);
+      if (finished) {
         this.pollingIds.delete(id);
       }
     });
