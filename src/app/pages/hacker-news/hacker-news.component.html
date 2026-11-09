@@ -142,11 +142,33 @@
             </div>
 
             <!-- 摘要（Markdown） -->
-            <div
-              class="hn-md-panel"
-              *ngIf="item._showSummary && item.summary_cn"
-            >
-              <markdown [data]="item.summary_cn" [disableSanitizer]="false"></markdown>
+            <div class="hn-md-wrap" *ngIf="item._showSummary && item.summary_cn">
+              <div class="hn-md-toolbar">
+                <button
+                  type="button"
+                  class="hn-md-btn"
+                  (click)="copySummaryMarkdown(item)"
+                >
+                  {{ item._copiedMd ? "已复制" : "复制 Markdown" }}
+                </button>
+                <button
+                  type="button"
+                  class="hn-md-btn hn-copy-btn"
+                  (click)="copySummaryHtml(item, summaryPanel)"
+                >
+                  {{ item._copiedHtml ? "已复制" : "复制 HTML" }}
+                </button>
+                <button
+                  type="button"
+                  class="hn-md-btn hn-um-btn"
+                  (click)="copySummaryUmeditor(item, summaryPanel)"
+                >
+                  {{ item._copiedUm ? "已复制" : "复制 UMeditor" }}
+                </button>
+              </div>
+              <div #summaryPanel class="hn-md-panel">
+                <markdown [data]="item.summary_cn" [disableSanitizer]="false"></markdown>
+              </div>
             </div>
 
             <!-- 正文内容（Markdown） -->

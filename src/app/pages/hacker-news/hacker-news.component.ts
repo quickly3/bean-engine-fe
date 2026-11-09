@@ -15,6 +15,127 @@ export class HackerNewsComponent implements OnDestroy {
   private static readonly POLL_INTERVAL = 3000;
   private static readonly MAX_POLL_ATTEMPTS = 36;
 
+  // 复制时需内联到剪贴板的排版样式
+  private static readonly COPY_TYPOGRAPHY_PROPS = [
+    'color',
+    'font-family',
+    'font-size',
+    'font-weight',
+    'font-style',
+    'line-height',
+    'letter-spacing',
+    'text-align',
+  ];
+
+  // 复制时需内联到剪贴板的块级样式
+  private static readonly COPY_BLOCK_PROPS = [
+    'margin-top',
+    'margin-right',
+    'margin-bottom',
+    'margin-left',
+    'padding-top',
+    'padding-right',
+    'padding-bottom',
+    'padding-left',
+    'background-color',
+    'white-space',
+    'word-break',
+    'overflow-wrap',
+    'text-decoration-line',
+    'list-style-type',
+    'list-style-position',
+    'vertical-align',
+    'border-collapse',
+    'border-top-width',
+    'border-top-style',
+    'border-top-color',
+    'border-right-width',
+    'border-right-style',
+    'border-right-color',
+    'border-bottom-width',
+    'border-bottom-style',
+    'border-bottom-color',
+    'border-left-width',
+    'border-left-style',
+    'border-left-color',
+    'border-top-left-radius',
+    'border-top-right-radius',
+    'border-bottom-left-radius',
+    'border-bottom-right-radius',
+    'max-width',
+  ];
+
+  // 观察者网等站点使用 UMeditor，其 XSS 白名单只保留这些标签，
+  // 且只有 div/p/section 允许携带 style，其余标签上的样式会被清掉
+  private static readonly UMEDITOR_INLINE_TAGS: Record<string, string> = {
+    STRONG: 'strong',
+    B: 'strong',
+    I: 'i',
+    EM: 'i',
+    U: 'u',
+    SUP: 'sup',
+  };
+
+  private static readonly UMEDITOR_UNWRAP_TAGS = new Set([
+    'SPAN',
+    'CODE',
+    'MARK',
+    'DEL',
+    'S',
+    'STRIKE',
+    'SUB',
+    'SMALL',
+    'FONT',
+    'LABEL',
+    'TT',
+    'KBD',
+    'SAMP',
+    'VAR',
+    'CITE',
+    'Q',
+    'ABBR',
+    'TIME',
+  ]);
+
+  private static readonly UMEDITOR_BLOCK_TAGS = new Set([
+    'P',
+    'DIV',
+    'SECTION',
+    'ARTICLE',
+    'BLOCKQUOTE',
+    'H1',
+    'H2',
+    'H3',
+    'H4',
+    'H5',
+    'H6',
+    'UL',
+    'OL',
+    'LI',
+    'PRE',
+    'TABLE',
+    'THEAD',
+    'TBODY',
+    'TR',
+    'TD',
+    'TH',
+    'HR',
+    'FIGURE',
+    'FIGCAPTION',
+    'DL',
+    'DT',
+    'DD',
+    'MARKDOWN',
+    'MAIN',
+    'HEADER',
+    'FOOTER',
+    'ASIDE',
+    'NAV',
+    'DETAILS',
+    'SUMMARY',
+    'ADDRESS',
+  ]);
+
   resp: any = {
     data: [],
     page: 1,
@@ -157,6 +278,395 @@ export class HackerNewsComponent implements OnDestroy {
   toggleMarkdown(item: any, field: 'summary_cn' | 'content'): void {
     const key = field === 'summary_cn' ? '_showSummary' : '_showContent';
     item[key] = !item[key];
+  }
+
+  /**
+   * Markdown 面板的样式来自组件 SCSS（会被 Angular 编译成带 _ngcontent 的作用域选择器），
+   * 浏览器复制时只带走 DOM 结构和内联样式，不会带走这些 CSS，粘贴到富文本编辑器后样式就丢了。
+   * 这里在复制发生时把计算后的样式内联到克隆节点上，再写入剪贴板的 text/html。
+   * 非可编辑区域选中文字时 copy 事件只在 document 上触发，因此监听 document。
+   */
+  @HostListener('document:copy', ['$event'])
+  onDocumentCopy(event: ClipboardEvent): void {
+    const selection = window.getSelection();
+    if (
+      !event.clipboardData ||
+      !selection ||
+      selection.rangeCount === 0 ||
+      selection.isCollapsed
+    ) {
+      return;
+    }
+
+    const range = selection.getRangeAt(0);
+    const node = range.commonAncestorContainer;
+    const element =
+      node.nodeType === Node.ELEMENT_NODE
+        ? (node as Element)
+        : node.parentElement;
+    const panel = element?.closest('.hn-md-panel') as HTMLElement | null;
+    if (!panel) return;
+
+    const { html, text } = this.buildCopyPayload(panel, range);
+    event.clipboardData.setData('text/html', html);
+    event.clipboardData.setData('text/plain', text);
+    event.preventDefault();
+  }
+
+  // 复制摘要全文（Markdown 源文本）
+  async copySummaryMarkdown(item: any): Promise<void> {
+    const text = item.summary_cn || '';
+    try {
+      if (!navigator.clipboard?.writeText) {
+        throw new Error('Clipboard API unavailable');
+      }
+      await navigator.clipboard.writeText(text);
+    } catch {
+      this.copyPlainText(text);
+    }
+    item._copiedMd = true;
+    setTimeout(() => {
+      item._copiedMd = false;
+    }, 1500);
+  }
+
+  // 复制摘要全文（保留原有标签和内联样式的 HTML）
+  async copySummaryHtml(item: any, panel: HTMLElement): Promise<void> {
+    const { html, text } = this.buildCopyPayload(panel);
+    try {
+      await this.writeRichClipboard(html, text);
+    } catch {
+      // Clipboard API 不可用时退回选区复制，走 document 的 copy 处理
+      this.copyPanelBySelection(panel);
+    }
+    item._copiedHtml = true;
+    setTimeout(() => {
+      item._copiedHtml = false;
+    }, 1500);
+  }
+
+  // 复制摘要全文（UMeditor 白名单兼容格式，用于观察者网等站点）
+  async copySummaryUmeditor(item: any, panel: HTMLElement): Promise<void> {
+    const { html, text } = this.buildCopyPayload(panel, undefined, 'umeditor');
+    try {
+      await this.writeRichClipboard(html, text);
+    } catch {
+      this.copyPanelBySelection(panel);
+    }
+    item._copiedUm = true;
+    setTimeout(() => {
+      item._copiedUm = false;
+    }, 1500);
+  }
+
+  private copyPlainText(text: string): void {
+    const textarea = document.createElement('textarea');
+    textarea.style.position = 'fixed';
+    textarea.style.left = '0';
+    textarea.style.top = '0';
+    textarea.style.opacity = '0';
+    textarea.value = text;
+    document.body.appendChild(textarea);
+    textarea.focus();
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+  }
+
+  private async writeRichClipboard(html: string, text: string): Promise<void> {
+    if (!navigator.clipboard?.write || typeof ClipboardItem === 'undefined') {
+      throw new Error('Clipboard API unavailable');
+    }
+    await navigator.clipboard.write([
+      new ClipboardItem({
+        'text/html': new Blob([html], { type: 'text/html' }),
+        'text/plain': new Blob([text], { type: 'text/plain' }),
+      }),
+    ]);
+  }
+
+  private copyPanelBySelection(panel: HTMLElement): void {
+    const selection = window.getSelection();
+    if (!selection) return;
+    const range = document.createRange();
+    range.selectNodeContents(panel);
+    selection.removeAllRanges();
+    selection.addRange(range);
+    document.execCommand('copy');
+    selection.removeAllRanges();
+  }
+
+  // 把面板内容连同计算后的样式一起序列化成剪贴板数据
+  private buildCopyPayload(
+    panel: HTMLElement,
+    range?: Range,
+    target: 'html' | 'umeditor' = 'html'
+  ): { html: string; text: string } {
+    // 记录原有 style 属性，复制完成后还原，避免污染页面
+    const restores: Array<{ el: HTMLElement; style: string | null }> = [];
+    try {
+      const elements: HTMLElement[] = [
+        panel,
+        ...Array.from(panel.querySelectorAll<HTMLElement>('*')),
+      ];
+      // 先统一计算，再统一写入，避免写入后的样式影响后续元素的计算结果
+      const styles = elements.map((el) =>
+        this.buildCopyStyle(window.getComputedStyle(el))
+      );
+      elements.forEach((el, i) => {
+        restores.push({ el, style: el.getAttribute('style') });
+        el.setAttribute('style', styles[i]);
+      });
+
+      // 用面板的基础排版包一层，确保只选中部分内容时也能继承正文字号/行高/颜色
+      const wrapper = document.createElement('div');
+      wrapper.setAttribute(
+        'style',
+        this.buildCopyStyle(window.getComputedStyle(panel), true)
+      );
+      if (range) {
+        wrapper.appendChild(range.cloneContents());
+      } else {
+        Array.from(panel.childNodes).forEach((node) => {
+          wrapper.appendChild(node.cloneNode(true));
+        });
+      }
+      this.cleanCopyNode(wrapper);
+
+      return {
+        html:
+          target === 'umeditor'
+            ? this.toUmeditorHtml(wrapper)
+            : wrapper.innerHTML,
+        text: range ? range.toString() : panel.innerText,
+      };
+    } finally {
+      restores.forEach(({ el, style }) => {
+        if (style === null) {
+          el.removeAttribute('style');
+        } else {
+          el.setAttribute('style', style);
+        }
+      });
+    }
+  }
+
+  /**
+   * UMeditor（观察者网使用的富文本编辑器）粘贴时会过 XSS 白名单：
+   * 白名单外的标签（h1-h6、ul/ol/li、pre/code、table、br 等）会被整段删除，
+   * 只有 div/p/section 上的 style 会保留。这里把内容重写成只含白名单标签、
+   * 样式全部落在 p/div 上的结构，保证粘贴后外观不丢失。
+   */
+  private toUmeditorHtml(root: HTMLElement): string {
+    const container = document.createElement('div');
+    const baseStyle = root.getAttribute('style');
+    if (baseStyle) {
+      container.setAttribute('style', baseStyle);
+    }
+    Array.from(root.childNodes).forEach((node) => {
+      this.convertUmeditorNode(node, container, 0);
+    });
+    return container.outerHTML;
+  }
+
+  private convertUmeditorNode(
+    node: Node,
+    out: HTMLElement,
+    depth: number,
+    inheritedStyle = ''
+  ): void {
+    if (node.nodeType === Node.TEXT_NODE) {
+      out.appendChild(document.createTextNode(node.textContent || ''));
+      return;
+    }
+    if (node.nodeType !== Node.ELEMENT_NODE) {
+      return;
+    }
+
+    const el = node as HTMLElement;
+    const tag = el.tagName.toUpperCase();
+    const style = el.getAttribute('style') || '';
+
+    if (tag === 'BR') {
+      out.appendChild(document.createTextNode('\n'));
+      return;
+    }
+    if (tag === 'HR') {
+      out.appendChild(document.createElement('hr'));
+      return;
+    }
+
+    // 行内标签：只保留白名单里的 strong/i/u/sup
+    const inlineTag = HackerNewsComponent.UMEDITOR_INLINE_TAGS[tag];
+    if (inlineTag) {
+      const inline = document.createElement(inlineTag);
+      Array.from(el.childNodes).forEach((child) => {
+        this.convertUmeditorNode(child, inline, depth, inheritedStyle);
+      });
+      out.appendChild(inline);
+      return;
+    }
+
+    // 链接/图片：只保留白名单允许的属性，样式无法保留
+    if (tag === 'A' || tag === 'IMG') {
+      const kept = document.createElement(tag.toLowerCase());
+      ['href', 'target', 'title', 'src', 'alt'].forEach((attr) => {
+        const value = el.getAttribute(attr);
+        if (value != null) {
+          kept.setAttribute(attr, value);
+        }
+      });
+      if (tag === 'A') {
+        Array.from(el.childNodes).forEach((child) => {
+          this.convertUmeditorNode(child, kept, depth, inheritedStyle);
+        });
+      }
+      out.appendChild(kept);
+      return;
+    }
+
+    // 行内但白名单不支持的标签（span/code/mark 等）：拆掉标签保留内容
+    if (HackerNewsComponent.UMEDITOR_UNWRAP_TAGS.has(tag)) {
+      Array.from(el.childNodes).forEach((child) => {
+        this.convertUmeditorNode(child, out, depth, inheritedStyle);
+      });
+      return;
+    }
+
+    // 代码块：转成保留换行和等宽样式的 p
+    if (tag === 'PRE') {
+      const p = document.createElement('p');
+      p.setAttribute(
+        'style',
+        this.mergeCopyStyle(style, 'white-space:pre-wrap', inheritedStyle)
+      );
+      p.textContent = el.textContent || '';
+      out.appendChild(p);
+      return;
+    }
+
+    // 列表：白名单没有 ul/ol/li，转成带项目符号/序号的 p
+    if (tag === 'UL' || tag === 'OL') {
+      const items = Array.from(el.children).filter(
+        (child) => child.tagName.toUpperCase() === 'LI'
+      );
+      items.forEach((li, index) => {
+        const p = document.createElement('p');
+        p.setAttribute(
+          'style',
+          this.mergeCopyStyle(
+            li.getAttribute('style') || '',
+            `padding-left:${depth * 22}px`,
+            inheritedStyle,
+            li.querySelector('br') ? 'white-space:pre-wrap' : ''
+          )
+        );
+        p.appendChild(
+          document.createTextNode(tag === 'OL' ? `${index + 1}. ` : '• ')
+        );
+        // 先挂到输出上，保证嵌套列表出现在当前条目之后
+        out.appendChild(p);
+        Array.from(li.childNodes).forEach((child) => {
+          const childTag =
+            child.nodeType === Node.ELEMENT_NODE
+              ? (child as HTMLElement).tagName.toUpperCase()
+              : '';
+          if (childTag === 'UL' || childTag === 'OL') {
+            this.convertUmeditorNode(child, out, depth + 1, inheritedStyle);
+          } else {
+            this.convertUmeditorNode(child, p, depth, inheritedStyle);
+          }
+        });
+      });
+      return;
+    }
+
+    // 表格：白名单没有 table，按行转成 p，单元格用 | 分隔
+    if (tag === 'TABLE') {
+      Array.from(el.querySelectorAll('tr')).forEach((row) => {
+        const p = document.createElement('p');
+        p.setAttribute(
+          'style',
+          this.mergeCopyStyle(style, inheritedStyle)
+        );
+        Array.from(row.children)
+          .filter((cell) => ['TD', 'TH'].includes(cell.tagName.toUpperCase()))
+          .forEach((cell, index) => {
+            if (index > 0) {
+              p.appendChild(document.createTextNode('  |  '));
+            }
+            const text = (cell.textContent || '').trim();
+            if (cell.tagName.toUpperCase() === 'TH') {
+              const strong = document.createElement('strong');
+              strong.textContent = text;
+              p.appendChild(strong);
+            } else {
+              p.appendChild(document.createTextNode(text));
+            }
+          });
+        out.appendChild(p);
+      });
+      return;
+    }
+
+    // 容器里还有块级元素时保持透明，把样式下发给子块
+    const hasBlockChild = Array.from(el.children).some((child) =>
+      HackerNewsComponent.UMEDITOR_BLOCK_TAGS.has(child.tagName.toUpperCase())
+    );
+    if (hasBlockChild) {
+      const nextInherited = this.mergeCopyStyle(style, inheritedStyle);
+      Array.from(el.childNodes).forEach((child) => {
+        this.convertUmeditorNode(child, out, depth, nextInherited);
+      });
+      return;
+    }
+
+    // 其余块级元素（h1-h6/p/div/blockquote 等）统一转成 p
+    const p = document.createElement('p');
+    const pStyle = this.mergeCopyStyle(
+      style,
+      inheritedStyle,
+      el.querySelector('br') ? 'white-space:pre-wrap' : ''
+    );
+    if (pStyle) {
+      p.setAttribute('style', pStyle);
+    }
+    Array.from(el.childNodes).forEach((child) => {
+      this.convertUmeditorNode(child, p, depth, inheritedStyle);
+    });
+    out.appendChild(p);
+  }
+
+  private mergeCopyStyle(...parts: Array<string | null | undefined>): string {
+    return parts.filter((part): part is string => !!part).join(';');
+  }
+
+  // 生成内联样式字符串；typographyOnly 只保留文字相关样式
+  private buildCopyStyle(cs: CSSStyleDeclaration, typographyOnly = false): string {
+    const props = typographyOnly
+      ? HackerNewsComponent.COPY_TYPOGRAPHY_PROPS
+      : [
+          ...HackerNewsComponent.COPY_TYPOGRAPHY_PROPS,
+          ...HackerNewsComponent.COPY_BLOCK_PROPS,
+        ];
+    return props
+      .map((prop) => {
+        const value = cs.getPropertyValue(prop);
+        return value ? `${prop}:${value}` : '';
+      })
+      .filter(Boolean)
+      .join(';');
+  }
+
+  // 清理 Angular 作用域属性和 class/id，避免复制出去的 HTML 带上无关信息
+  private cleanCopyNode(root: HTMLElement): void {
+    root.querySelectorAll<HTMLElement>('*').forEach((el) => {
+      el.removeAttribute('class');
+      el.removeAttribute('id');
+      Array.from(el.attributes)
+        .filter((attr) => /^(_ng|ng-|data-)/i.test(attr.name))
+        .forEach((attr) => el.removeAttribute(attr.name));
+    });
   }
 
   // 爬取任务进行中（待处理 / 处理中）
