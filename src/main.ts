@@ -31,5 +31,16 @@ function setupTauriExternalLinks() {
 }
 
 platformBrowserDynamic().bootstrapModule(AppModule)
-  .then(() => setupTauriExternalLinks())
+  .then(() => {
+    setupTauriExternalLinks();
+    // 首屏渲染完成后关闭 index.html 中的加载进度页
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const done = (window as any).__APP_LOADING_DONE__;
+        if (typeof done === 'function') {
+          done();
+        }
+      });
+    });
+  })
   .catch(err => console.error(err));

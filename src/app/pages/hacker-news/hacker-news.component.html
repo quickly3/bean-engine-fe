@@ -3,8 +3,12 @@
 <!-- Hacker News 风格的头部 -->
 <div class="hn-header">
   <div class="hn-header-inner">
-    <div class="hn-logo">Y</div>
-    <div class="hn-title">Hacker News</div>
+    <div class="hn-brand">
+      <div class="hn-logo">Y</div>
+      <div class="hn-title">Hacker News</div>
+    </div>
+
+    <!-- 桌面端搜索与筛选 -->
     <div class="hn-nav">
       <div class="hn-search-wrapper">
         <input 
@@ -15,6 +19,7 @@
           (keydown.enter)="onSearch()">
         <svg 
           class="hn-search-icon" 
+          *ngIf="!isSearching"
           xmlns="http://www.w3.org/2000/svg" 
           viewBox="0 0 24 24" 
           fill="none" 
@@ -26,6 +31,7 @@
           <circle cx="11" cy="11" r="8"></circle>
           <path d="m21 21-4.35-4.35"></path>
         </svg>
+        <span class="hn-spinner" *ngIf="isSearching" aria-label="搜索中"></span>
       </div>
       <span class="hn-nav-total">{{ resp.total }} 条新闻</span>
       <span class="hn-nav-separator">|</span>
@@ -55,12 +61,146 @@
         </option>
       </select>
     </div>
+
+    <!-- 移动端操作按钮 -->
+    <div class="hn-mobile-actions">
+      <button
+        type="button"
+        class="hn-icon-btn"
+        [class.active]="mobileSearchOpen"
+        aria-label="搜索"
+        (click)="toggleMobileSearch()"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
+      </button>
+      <button
+        type="button"
+        class="hn-icon-btn hn-filter-trigger"
+        aria-label="筛选"
+        (click)="openFilters()"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M3 5h18l-7 8v6l-4 2v-8z"></path>
+        </svg>
+        <span class="hn-filter-count" *ngIf="activeFilterCount">{{ activeFilterCount }}</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- 移动端搜索条 -->
+  <div class="hn-mobile-search" *ngIf="mobileSearchOpen">
+    <input
+      type="text"
+      class="hn-mobile-search-input"
+      placeholder="搜索新闻..."
+      [(ngModel)]="searchKeyword"
+      (keydown.enter)="onMobileSearch()"
+    />
+    <button
+      type="button"
+      class="hn-mobile-search-submit"
+      [disabled]="isSearching"
+      (click)="onMobileSearch()"
+    >
+      {{ isSearching ? "搜索中…" : "搜索" }}
+    </button>
+    <button type="button" class="hn-mobile-search-cancel" (click)="toggleMobileSearch()">
+      取消
+    </button>
+  </div>
+
+  <!-- 已选筛选条件 -->
+  <div
+    class="hn-mobile-chips"
+    *ngIf="selectedCategory !== categories[0] || selectedLevel !== 'all'"
+  >
+    <span class="hn-chip" *ngIf="selectedCategory !== categories[0]">
+      {{ selectedCategory }}
+      <button type="button" aria-label="清除分类" (click)="clearCategory()">×</button>
+    </span>
+    <span class="hn-chip" *ngIf="selectedLevel !== 'all'">
+      Level {{ selectedLevel }}
+      <button type="button" aria-label="清除等级" (click)="clearLevel()">×</button>
+    </span>
+  </div>
+
+  <!-- 搜索/翻页请求中的进度条 -->
+  <div class="hn-progress" *ngIf="isSearching">
+    <span></span>
+  </div>
+</div>
+
+<!-- 移动端筛选弹层 -->
+<div class="hn-sheet-mask" *ngIf="filtersOpen" (click)="closeFilters()"></div>
+<div class="hn-sheet" *ngIf="filtersOpen">
+  <div class="hn-sheet-header">
+    <span>筛选</span>
+    <button type="button" class="hn-sheet-close" aria-label="关闭" (click)="closeFilters()">
+      ×
+    </button>
+  </div>
+  <div class="hn-sheet-body">
+    <div class="hn-sheet-section">
+      <div class="hn-sheet-label">分类</div>
+      <div class="hn-chip-group">
+        <button
+          type="button"
+          class="hn-option"
+          *ngFor="let c of categories"
+          [class.active]="draftCategory === c"
+          (click)="draftCategory = c"
+        >
+          {{ c }}
+        </button>
+      </div>
+    </div>
+    <div class="hn-sheet-section">
+      <div class="hn-sheet-label">等级</div>
+      <div class="hn-chip-group">
+        <button
+          type="button"
+          class="hn-option"
+          *ngFor="let level of levelOptions"
+          [class.active]="draftLevel === level"
+          (click)="draftLevel = level"
+        >
+          {{ level === 'all' ? '所有等级' : 'Level ' + level }}
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="hn-sheet-footer">
+    <button type="button" class="hn-sheet-btn hn-sheet-reset" (click)="resetFilters()">
+      重置
+    </button>
+    <button type="button" class="hn-sheet-btn hn-sheet-apply" (click)="applyFilters()">
+      确定
+    </button>
   </div>
 </div>
 
 <!-- HN 风格的内容区 -->
 <div class="hn-container">
-  <table class="hn-list" cellspacing="0">
+  <table class="hn-list" cellspacing="0" [class.is-searching]="isSearching">
     <tbody>
       <ng-container *ngFor="let item of resp.data; let i = index">
         <tr class="hn-item">
@@ -94,7 +234,7 @@
                 <button
                   type="button"
                   class="hn-md-btn"
-                  (click)="toggleMarkdown(item, 'summary_cn')"
+                  (click)="toggleMarkdown(item, 'summary_cn', $event)"
                 >
                   {{ item._showSummary ? "收起摘要" : "摘要" }}
                 </button>
@@ -104,7 +244,7 @@
                 <button
                   type="button"
                   class="hn-md-btn"
-                  (click)="toggleMarkdown(item, 'content')"
+                  (click)="toggleMarkdown(item, 'content', $event)"
                 >
                   {{ item._showContent ? "收起内容" : "内容" }}
                 </button>
@@ -127,7 +267,7 @@
                 >{{ jobBadgeText(item) }}</span
               >
             </span>
-            <div>
+            <div class="hn-en-block">
               <a
                 [href]="item.url || '#'"
                 target="_blank"
@@ -172,7 +312,10 @@
             </div>
 
             <!-- 正文内容（Markdown） -->
-            <div class="hn-md-panel" *ngIf="item._showContent && item.content">
+            <div
+              class="hn-md-panel hn-content-panel"
+              *ngIf="item._showContent && item.content"
+            >
               <markdown [data]="item.content" [disableSanitizer]="false"></markdown>
             </div>
           </td>
@@ -180,6 +323,17 @@
       </ng-container>
     </tbody>
   </table>
+
+  <!-- 移动端加载更多 -->
+  <button
+    type="button"
+    class="hn-load-more"
+    *ngIf="resp.page < totalPages"
+    [disabled]="isLoadingMore"
+    (click)="loadMore()"
+  >
+    {{ isLoadingMore ? "加载中…" : "加载更多" }}
+  </button>
 
   <!-- 分页 -->
   <div class="hn-pagination">

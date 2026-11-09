@@ -1,4 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <!-- 遮罩必须放在 navbar 内部：navbar 的 sticky + z-index 会创建层叠上下文，
+       放外面时遮罩层级会高于抽屉，导致抽屉里的菜单点不到 -->
+  <div class="nav-mobile-mask" *ngIf="navShow" (click)="closeNav()"></div>
   <div class="container-fluid">
     <a class="navbar-brand" href="#">Search Gank</a>
     <button
@@ -18,12 +21,24 @@
       [ngClass]="{ show: navShow }"
       id="navbarText"
     >
+      <div class="nav-drawer-header">
+        <span>菜单</span>
+        <button
+          type="button"
+          class="nav-drawer-close"
+          aria-label="关闭菜单"
+          (click)="closeNav()"
+        >
+          ×
+        </button>
+      </div>
       <ul class="navbar-nav me-auto">
         <li class="nav-item" *ngFor="let item of items">
           <a
             class="nav-link"
             href="#/{{item.value}}"
             [ngClass]="{ active: router.url.indexOf(item.value) > -1 }"
+            (click)="closeNav()"
             >{{ item.label }}</a
           >
         </li>

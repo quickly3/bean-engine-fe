@@ -69,9 +69,23 @@ export class NavComponent implements OnInit {
 
   toggleNav() {
     this.navShow = !this.navShow;
+    this.setBodyLock(this.navShow);
+  }
+
+  closeNav() {
+    if (!this.navShow) {
+      return;
+    }
+    this.navShow = false;
+    this.setBodyLock(false);
+  }
+
+  private setBodyLock(lock: boolean) {
+    document.body.style.overflow = lock ? 'hidden' : '';
   }
 
   openLogin() {
+    this.closeNav();
     this.loginError = '';
     this.showProfileModal = false;
     this.showLoginModal = true;
@@ -116,6 +130,7 @@ export class NavComponent implements OnInit {
   }
 
   openProfile() {
+    this.closeNav();
     if (!this.isLoggedIn) {
       this.openLogin();
       return;

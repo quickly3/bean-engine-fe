@@ -1,13 +1,273 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="utf-8">
   <title>Search Gank</title>
   <base href="./">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: #f6f6ef;
+    }
+
+    #app-loading {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      box-sizing: border-box;
+      background: #f6f6ef;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+        "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      transition: opacity 0.35s ease, visibility 0.35s ease;
+    }
+
+    #app-loading.is-done {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .loader-card {
+      width: 100%;
+      max-width: 420px;
+      padding: 32px 28px;
+      box-sizing: border-box;
+      background: #fff;
+      border: 1px solid #e6e6df;
+      border-radius: 12px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+      text-align: center;
+    }
+
+    .loader-spinner {
+      width: 40px;
+      height: 40px;
+      margin: 0 auto 16px;
+      border: 3px solid #ffe0c2;
+      border-top-color: #ff6600;
+      border-radius: 50%;
+      animation: loader-rotate 0.9s linear infinite;
+    }
+
+    @keyframes loader-rotate {
+      to { transform: rotate(360deg); }
+    }
+
+    .loader-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #ff6600;
+      letter-spacing: 0.5px;
+    }
+
+    .loader-sub {
+      margin-top: 8px;
+      font-size: 13px;
+      color: #666;
+    }
+
+    .loader-bar {
+      margin-top: 22px;
+      height: 8px;
+      border-radius: 999px;
+      background: #f0efe8;
+      overflow: hidden;
+    }
+
+    .loader-bar-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #ff8c1a, #ff6600);
+      transition: width 0.3s ease;
+    }
+
+    .loader-meta {
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #888;
+    }
+
+    .loader-meta strong {
+      color: #ff6600;
+      font-size: 13px;
+    }
+
+    .loader-hint {
+      margin-top: 18px;
+      font-size: 12px;
+      line-height: 1.6;
+      color: #999;
+    }
+  </style>
 </head>
 <body>
+  <div id="app-loading" role="status" aria-live="polite">
+    <div class="loader-card">
+      <div class="loader-spinner"></div>
+      <div class="loader-title">Search Gank</div>
+      <div class="loader-sub" id="loader-sub">正在加载前端资源…</div>
+      <div class="loader-bar">
+        <div class="loader-bar-fill" id="loader-fill"></div>
+      </div>
+      <div class="loader-meta">
+        <strong id="loader-percent">0%</strong>
+        <span id="loader-eta">预计剩余 -- 秒</span>
+      </div>
+      <div class="loader-hint" id="loader-hint">服务器资源加载较慢，请耐心等待…</div>
+    </div>
+  </div>
+
   <app-root></app-root>
+
+  <script>
+    (function () {
+      var overlay = document.getElementById('app-loading');
+      var fill = document.getElementById('loader-fill');
+      var percentEl = document.getElementById('loader-percent');
+      var etaEl = document.getElementById('loader-eta');
+      var subEl = document.getElementById('loader-sub');
+      var hintEl = document.getElementById('loader-hint');
+      var startAt = Date.now();
+      var shownPercent = 0;
+      var done = false;
+      var hideTimer = null;
+
+      // 参与进度计算的资源（Angular 的 js/css 包）
+      function resources() {
+        return document.querySelectorAll('script[src], link[rel="stylesheet"]');
+      }
+
+      function loadedCount(list) {
+        var wanted = {};
+        var i;
+        for (i = 0; i < list.length; i++) {
+          wanted[list[i].src || list[i].href] = true;
+        }
+        var entries = (performance.getEntriesByType &&
+          performance.getEntriesByType('resource')) || [];
+        var count = 0;
+        for (i = 0; i < entries.length; i++) {
+          var entry = entries[i];
+          if (wanted[entry.name] && (entry.responseEnd > 0 || entry.duration > 0)) {
+            count++;
+          }
+        }
+        return count;
+      }
+
+      function render(percent, etaText, subText) {
+        if (fill) {
+          fill.style.width = percent + '%';
+        }
+        if (percentEl) {
+          percentEl.textContent = Math.floor(percent) + '%';
+        }
+        if (etaText && etaEl) {
+          etaEl.textContent = etaText;
+        }
+        if (subText && subEl) {
+          subEl.textContent = subText;
+        }
+      }
+
+      function tick() {
+        if (done) {
+          return;
+        }
+
+        var elapsed = (Date.now() - startAt) / 1000;
+        var list = resources();
+        var total = list.length;
+        var loaded = loadedCount(list);
+
+        // 进度：已完成的 js/css 资源占比；同时用时间兜底，避免资源数量统计不到时进度不动
+        var ratio = total > 0 ? loaded / total : 0;
+        var timeFloor = Math.min(0.85, elapsed / 40);
+        var target = Math.min(0.92, Math.max(ratio, timeFloor));
+        var percent = Math.max(shownPercent, target * 100);
+        shownPercent = percent;
+
+        var etaText;
+        if (total > 0 && loaded >= total) {
+          etaText = '正在初始化应用…';
+        } else {
+          var avg = elapsed / Math.max(loaded, 1);
+          var remaining = total > 0 ? Math.max(total - loaded, 0) : 1;
+          // 资源并行下载，按 4 路并发估算剩余时间
+          var eta = Math.max(1, Math.ceil((remaining * avg) / 4));
+          etaText = '预计剩余 ' + Math.min(eta, 99) + ' 秒';
+        }
+
+        render(percent, etaText);
+
+        if (elapsed >= 30) {
+          hintEl.textContent = '加载时间较长，可检查网络后刷新重试。';
+        } else if (elapsed >= 12) {
+          hintEl.textContent = '服务器响应较慢，资源仍在加载，请稍候…';
+        }
+
+        setTimeout(tick, 250);
+      }
+
+      function finish() {
+        if (done) {
+          return;
+        }
+        done = true;
+        if (hideTimer) {
+          clearTimeout(hideTimer);
+        }
+        render(100, '加载完成', '加载完成');
+        setTimeout(function () {
+          if (overlay) {
+            overlay.classList.add('is-done');
+            setTimeout(function () {
+              if (overlay && overlay.parentNode) {
+                overlay.parentNode.removeChild(overlay);
+              }
+            }, 400);
+          }
+        }, 180);
+      }
+
+      // 供 Angular 启动完成后调用
+      window.__APP_LOADING_DONE__ = finish;
+
+      // 兜底：app-root 有内容时自动结束
+      var root = document.querySelector('app-root');
+      if (root && window.MutationObserver) {
+        var observer = new MutationObserver(function () {
+          if (root.childElementCount > 0) {
+            observer.disconnect();
+            finish();
+          }
+        });
+        observer.observe(root, { childList: true });
+        hideTimer = setTimeout(function () {
+          observer.disconnect();
+        }, 60000);
+      }
+
+      // 超过 60 秒仍未完成，给出提示但不强制关闭
+      setTimeout(function () {
+        if (!done && hintEl) {
+          hintEl.textContent = '加载仍未完成，请检查服务器状态或刷新页面。';
+        }
+      }, 60000);
+
+      tick();
+    })();
+  </script>
 </body>
 </html>

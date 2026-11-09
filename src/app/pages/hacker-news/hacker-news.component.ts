@@ -172,6 +172,25 @@ export class HackerNewsComponent implements OnDestroy {
   levelOptions = ['all', '5', '4', '3', '2', '1'];
   selectedLevel = 'all';
 
+  // 移动端状态：搜索展开、筛选弹层、筛选项草稿
+  mobileSearchOpen = false;
+  filtersOpen = false;
+  draftCategory = this.categories[0];
+  draftLevel = 'all';
+  isLoadingMore = false;
+  isSearching = false;
+
+  get activeFilterCount(): number {
+    let count = 0;
+    if (this.selectedCategory !== this.categories[0]) {
+      count++;
+    }
+    if (this.selectedLevel !== 'all') {
+      count++;
+    }
+    return count;
+  }
+
   private pollTimer: ReturnType<typeof setInterval> | null = null;
   private pollAttempts = 0;
   private pollingIds = new Set<number>();
@@ -184,10 +203,17 @@ export class HackerNewsComponent implements OnDestroy {
 
   ngOnInit() {
     this.getHackerNews();
+    window.addEventListener('scroll', this.handleWindowScroll, {
+      passive: true,
+    });
   }
 
   ngOnDestroy() {
+    window.removeEventListener('scroll', this.handleWindowScroll);
     this.stopPolling();
+    if (this.filtersOpen) {
+      this.closeFilters();
+    }
   }
 
   private buildQuery(page: number = this.resp.page) {
@@ -201,30 +227,102 @@ export class HackerNewsComponent implements OnDestroy {
   }
 
   getHackerNews() {
-    this.hackerNewsService
-      .getHackerNews(this.buildQuery())
-      .subscribe((resp: any) => {
+    this.isSearching = true;
+    this.hackerNewsService.getHackerNews(this.buildQuery()).subscribe({
+      next: (resp: any) => {
         this.resp = resp;
-      });
+        this.isSearching = false;
+      },
+      error: () => {
+        this.isSearching = false;
+      },
+    });
   }
 
   // 用于移动端“加载更多” —— 在当前数据后追加下一页
   loadMore(): void {
+    if (this.isLoadingMore) {
+      return;
+    }
     const nextPage = (this.resp.page || 1) + 1;
     if (nextPage > this.totalPages) return;
 
-    this.hackerNewsService
-      .getHackerNews({
-        page: nextPage,
-        size: this.resp.size,
-        category: this.selectedCategory,        level: this.selectedLevel === 'all' ? null : parseInt(this.selectedLevel),      })
-      .subscribe((resp: any) => {
+    this.isLoadingMore = true;
+    this.hackerNewsService.getHackerNews(this.buildQuery(nextPage)).subscribe({
+      next: (resp: any) => {
         // 将新页追加到现有数据中
         this.resp.data = [...(this.resp.data || []), ...(resp.data || [])];
         this.resp.page = resp.page;
         this.resp.total = resp.total;
         this.resp.size = resp.size;
-      });
+        this.isLoadingMore = false;
+      },
+      error: () => {
+        this.isLoadingMore = false;
+      },
+    });
+  }
+
+  toggleMobileSearch(): void {
+    this.mobileSearchOpen = !this.mobileSearchOpen;
+  }
+
+  // 手机端滑动到接近底部时自动加载下一页
+  private handleWindowScroll = (): void => {
+    if (!this.isMobileViewport() || this.isLoadingMore || this.isSearching) {
+      return;
+    }
+    if ((this.resp.page || 1) >= this.totalPages) {
+      return;
+    }
+    const scrolledToBottom =
+      window.innerHeight + window.scrollY >=
+      document.documentElement.scrollHeight - 240;
+    if (scrolledToBottom) {
+      this.loadMore();
+    }
+  };
+
+  onMobileSearch(): void {
+    this.mobileSearchOpen = false;
+    this.onSearch();
+  }
+
+  openFilters(): void {
+    this.draftCategory = this.selectedCategory;
+    this.draftLevel = this.selectedLevel;
+    this.filtersOpen = true;
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeFilters(): void {
+    this.filtersOpen = false;
+    document.body.style.overflow = '';
+  }
+
+  applyFilters(): void {
+    this.selectedCategory = this.draftCategory;
+    this.selectedLevel = this.draftLevel;
+    this.closeFilters();
+    this.resp.page = 1;
+    this.getHackerNews();
+  }
+
+  resetFilters(): void {
+    this.draftCategory = this.categories[0];
+    this.draftLevel = 'all';
+  }
+
+  clearCategory(): void {
+    this.selectedCategory = this.categories[0];
+    this.resp.page = 1;
+    this.getHackerNews();
+  }
+
+  clearLevel(): void {
+    this.selectedLevel = 'all';
+    this.resp.page = 1;
+    this.getHackerNews();
   }
 
   onCategoryChange(category: string): void {
@@ -274,10 +372,67 @@ export class HackerNewsComponent implements OnDestroy {
     }
   }
 
-  // 展开/收起某条记录的 Markdown 内容
-  toggleMarkdown(item: any, field: 'summary_cn' | 'content'): void {
+  // 展开/收起某条记录的 Markdown 内容（移动端按手风琴处理，同时只展开一条）
+  toggleMarkdown(
+    item: any,
+    field: 'summary_cn' | 'content',
+    event?: Event
+  ): void {
     const key = field === 'summary_cn' ? '_showSummary' : '_showContent';
-    item[key] = !item[key];
+    const willOpen = !item[key];
+    if (willOpen && this.isMobileViewport()) {
+      (this.resp.data || []).forEach((row: any) => {
+        if (row !== item) {
+          row._showSummary = false;
+          row._showContent = false;
+        }
+      });
+    }
+    item[key] = willOpen;
+
+    if (willOpen) {
+      const cell = (event?.target as HTMLElement | null)?.closest(
+        '.hn-title-cell'
+      ) as HTMLElement | null;
+      // 等 *ngIf 渲染和 markdown 解析完成后再测量位置
+      setTimeout(() => this.scrollToMarkdownPanel(cell, field), 150);
+    }
+  }
+
+  // 展开后把面板滚动到导航栏下方的可视区域，避免内容被挤出屏幕
+  private scrollToMarkdownPanel(
+    cell: HTMLElement | null,
+    field: 'summary_cn' | 'content'
+  ): void {
+    if (!cell) {
+      return;
+    }
+    const target = (field === 'summary_cn'
+      ? cell.querySelector('.hn-md-wrap')
+      : cell.querySelector('.hn-content-panel')) as HTMLElement | null;
+    if (!target) {
+      return;
+    }
+
+    const offset = this.isMobileViewport() ? 56 : 8;
+    const rect = target.getBoundingClientRect();
+    const viewportHeight =
+      window.innerHeight || document.documentElement.clientHeight;
+
+    // 面板顶部已在舒适阅读区域内时不滚动，避免页面跳动
+    if (rect.top >= offset && rect.top <= viewportHeight * 0.55) {
+      return;
+    }
+
+    const top = window.scrollY + rect.top - offset;
+    window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+  }
+
+  private isMobileViewport(): boolean {
+    return (
+      typeof window !== 'undefined' &&
+      window.matchMedia('(max-width: 600px)').matches
+    );
   }
 
   /**
